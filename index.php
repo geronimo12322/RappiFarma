@@ -1,9 +1,3 @@
-<?php
-include "linkDB.php";
-$db = new database();
-$conn = $db->conexion();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
