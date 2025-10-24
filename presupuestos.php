@@ -2,63 +2,43 @@
 $title = "Cargar Presupuestos";
 include "includes/farm_header.php";
 ?>
-
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-lg-12 col-xl-5 outline m-3 p-2">
-            <div class="m-1">
-                <h3>Pedido</h3>
-                <hr class="text-secondary">
-                imagen etc
-            </div>
-        </div>
-        <div class="col-lg-12 col-xl-5 outline m-3 p-2">
-            <div class="m-1">
-                <h3>Presupuesto</h3>
-                <hr class="text-secondary">
-                <div class="container-fluid">
-                    <div style="overflow-y:auto;">
-                        <table class="table" id="pres_table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nombre Generico</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Formato</th>
-                                    <th scope="col">Cantidad</th>
-                                    <th scope="col">Precio</th>
-                                    <th scope="col">Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pres_tbody">
-                                <tr>
-                                    <th scope="row">Test</th>
-                                    <td>TestTest</td>
-                                    <td>format</td>
-                                    <td>10</td>
-                                    <td>100</td>
-                                    <td>
-                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button type="button" class="btn btn-outline-success"><i class="bi bi-pencil"></i></button>
-                                            <button type="button" class="btn btn-outline-danger"><i class="bi bi-eraser"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+<main role="main" style="margin-top:65px;margin-bottom:70px;">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12 col-xl-5 outline m-3 p-2">
+                <div class="m-1">
+                    <h3>Pedido</h3>
+                    <hr class="text-secondary">
+                    <div class="container-fluid">
+                        asdasd
                     </div>
-                    <div class="row">
-                        <div class="col-5">
-                            <button id="nuevo-btn" type="button" data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-outline-secondary"><i class="bi bi-cart-plus"></i> Agregar Producto</button>
+                </div>
+            </div>
+            <div class="col-lg-12 col-xl-5 outline m-3 p-2">
+                <div class="m-1">
+                    <h3>Presupuesto</h3>
+                    <hr class="text-secondary">
+                    <div class="container-fluid">
+                        <div style="overflow-y:auto;">
+                            <table class="table" id="pres_table">
+                                <thead>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-5 offset-2 d-flex justify-content-end align-items-center">
-                            <span>Total: <span id="total"></span>$</span>
+                        <div class="row">
+                            <div class="col-5">
+                                <button id="nuevo-btn" type="button" data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-outline-secondary"><i class="bi bi-cart-plus"></i> Agregar Producto</button>
+                            </div>
+                            <div class="col-5 offset-2 d-flex justify-content-end align-items-center">
+                                <span>Total: <span id="total"></span>$</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -69,29 +49,59 @@ include "includes/farm_header.php";
             </div>
             <div class="modal-body">
                 <form id="form">
-                    <div class="form-floating mb-3">
-                        <input class="form-control" placeholder="Nombre Generico" type="text" id="nombre_gen">
+                    <div class="row">
+                        <div class="col">
+                            <label id="nombre_gen-error" class="error" for="nombre_gen"></label>
+                        </div>
+                        <div class="col"><br></div>
+                    </div>
+                    <div class="form-floating">
+                        <input class="form-control" placeholder="Nombre Generico" type="text" id="nombre_gen" name="nombre_gen">
                         <label for="nombre_gen">Nombre Generico</label>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input class="form-control" placeholder="Nombre Comercial" type="text" id="nombre">
+                    <div class="row">
+                        <div class="col">
+                            <label id="nombre-error" class="error" for="nombre"></label>
+                        </div>
+                        <div class="col mb-2"><br></div>
+                    </div>
+                    <div class="form-floating">
+                        <input class="form-control" placeholder="Nombre Comercial" type="text" id="nombre" name="nombre">
                         <label for="nombre">Nombre Comercial</label>
                     </div>
-                    <div class="form-floating mb-3">
-                        <select class="form-select mb-3" id="formato">
-                            <option selected hidden>Formato</option>
+                    <div class="row">
+                        <div class="col">
+                            <label id="formato-error" class="error" for="formato"></label>
+                        </div>
+                        <div class="col mb-2"><br></div>
+                    </div>
+                    <div class="form-floating">
+                        <select class="form-select" id="formato" name="formato">
+                            <option value="" selected hidden>Formato</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>
                             <option value="3">Three</option>
                         </select>
                         <label for="formato">Formato</label>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input class="form-control" placeholder="Cantidad" type="number" id="cant"  min="1" step="1">
-                        <label for="cant" class="form-label">Cantidad</label>
+                    <div class="row">
+                        <div class="col">
+                            <label id="cant-error" class="error" for="cant"></label>
+                        </div>
+                        <div class="col mb-2"><br></div>
                     </div>
                     <div class="form-floating">
-                        <input class="form-control" placeholder="Precio" type="text" id="precio">
+                        <input class="form-control" placeholder="Cantidad" type="number" id="cant" name="cant" min="1" step="1">
+                        <label for="cant" class="form-label">Cantidad</label>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label id="precio-error" class="error" for="precio"></label>
+                        </div>
+                        <div class="col"><br></div>
+                    </div>
+                    <div class="form-floating">
+                        <input class="form-control" placeholder="Precio" type="text" id="precio" name="precio">
                         <label for="precio">Precio</label>
                     </div>
                 </form>

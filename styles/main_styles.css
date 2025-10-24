@@ -3,11 +3,8 @@
 }
 
 .outline {
-  outline: 10px solid;
-  outline: #f66;
-  border-radius: 3px;
-  outline: inset thick;
   outline: rgba(var(--bs-secondary-rgb)) solid 1px;
+  border-radius: 3px;
   @media (width < 1200px) {
     border-radius: 0px;
   }
