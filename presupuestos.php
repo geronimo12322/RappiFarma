@@ -22,7 +22,16 @@ include "includes/farm_header.php";
                         <div style="overflow-y:auto;">
                             <table class="table" id="pres_table">
                                 <thead>
-                                </tbody>
+                                    <tr>
+                                        <th scope="col">Nombre Generico</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Formato</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Precio</th>
+                                        <th scope="col">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pres_tbody"></tbody>
                             </table>
                         </div>
                         <div class="row">
