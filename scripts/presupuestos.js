@@ -4,13 +4,16 @@ $(document).ready(function() {
     var validation = $("#form").validate({
         rules: {
             nombre_gen : {
-                required: true
+                required: true,
+                maxlength: 50
             },
             nombre: {
                 required: true,
+                maxlength: 50
             },
             formato: {
                 required: true,
+                maxlength: 50
             },
             cant: {
                 required: true,
@@ -52,7 +55,16 @@ $(document).ready(function() {
             datatype:"json",
             data:  {info:data_ajax, opcion:"CARGAR_PRES", ID_Pedido:ID_Pedido, ID_Farmacia:ID_Farmacia},
             success: function(data) {
-                console.log(data);
+                var ret = JSON.parse(data);
+                if (ret['stat']) {
+                    window.alert("Presupuesto cargado correctamente.");
+                } else {
+                    if (ret['msg'] == "OCCUPIED") {
+                        window.alert("El presupuesto ya se encuentra tomado.");
+                    } else {
+                        window.alert("Ocurrio un error al cargar los valores a la base de datos.");
+                    }
+                }
             }
         });
     });

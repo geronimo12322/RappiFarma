@@ -2,12 +2,13 @@
 $title = "Cargar Presupuestos";
 include "includes/farm_header.php";
 ?>
+
 <main role="main" style="margin-top:65px;margin-bottom:70px;">
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-lg-12 col-xl-5 outline m-3 p-2">
+            <div class="col-lg-12 col-xl-5 md-outline m-3 p-2">
                 <div class="m-1">
-                    <h3>Pedido</h3>
+                    <h3>Receta</h3>
                     <hr class="text-secondary">
                     <div class="container-fluid">
                         asdasd

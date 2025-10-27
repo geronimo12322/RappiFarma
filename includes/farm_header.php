@@ -29,7 +29,7 @@ if (strtolower($_SERVER['REQUEST_URI']) != "/rappifarma/presupuestos.php" && str
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="pedidos.php"><i class="bi bi-bag-check"></i> Pedidos</a>
                     </li>
@@ -38,7 +38,7 @@ if (strtolower($_SERVER['REQUEST_URI']) != "/rappifarma/presupuestos.php" && str
                     </li>
                 </ul>
                 <div class="d-flex nav-item" role="search">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Cerrar Sesion</a>
                     </li>
