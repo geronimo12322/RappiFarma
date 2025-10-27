@@ -32,9 +32,28 @@ $(document).ready(function() {
     });
 
     $("#conf-btn").click(function() {
-        console.log('asds');
+        var data_ajax = new Array();
         $("#pres_tbody tr").each(function(index, elem) {
-            console.log($(elem).find("th:eq(0)").text());
+            var row_data = new Object();
+            row_data['nombre_gen'] = $(elem).find("th:eq(0)").text();
+            row_data['nombre'] = $(elem).find("td:eq(0)").text();
+            row_data['formato'] = $(elem).find("td:eq(1)").text();
+            row_data['cantidad'] = $(elem).find("td:eq(2)").text();
+            row_data['precio'] = $(elem).find("td:eq(3)").text();
+            data_ajax.push(row_data);
+        });
+
+        ID_Pedido = ID_Farmacia = 1; //-----------TEST VALUES-----------
+
+        $.ajax({
+            async: false,
+            url: "pres_cont.php",
+            type: "POST",
+            datatype:"json",
+            data:  {info:data_ajax, opcion:"CARGAR_PRES", ID_Pedido:ID_Pedido, ID_Farmacia:ID_Farmacia},
+            success: function(data) {
+                console.log(data);
+            }
         });
     });
 
