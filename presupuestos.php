@@ -42,6 +42,11 @@ include "includes/farm_header.php";
                                 <span>Total: <span id="total"></span>$</span>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-end align-items-center">
+                                <button id="conf-btn" type="button" class="btn btn-outline-success"><i class="bi bi-check-square"></i> Confirmar Presupuesto</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

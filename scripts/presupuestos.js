@@ -27,6 +27,15 @@ $(document).ready(function() {
 
     $("#nuevo-btn").click(function() {
         opcion = 1;
+        $('#form').trigger("reset");
+        validation.resetForm();
+    });
+
+    $("#conf-btn").click(function() {
+        console.log('asds');
+        $("#pres_tbody tr").each(function(index, elem) {
+            console.log($(elem).find("th:eq(0)").text());
+        });
     });
 
     $('#guardar-btn').click(function() {
@@ -39,23 +48,24 @@ $(document).ready(function() {
             var precio = $('#precio').val();
 
             if (opcion == 1) { //Si es nuevo, se carga una nueva fila
-                $('#pres_tbody').append('<tr id="elem-' + cant_elems + '"></tr>');
+                $('#pres_tbody').append('<tr id="elem-' + cant_elems + '"/>');
                 $('#elem-' + cant_elems).append('<th scope="row">' + nombre_gen + '</th>');
                 $('#elem-' + cant_elems).append('<td>' + nombre + '</td>');
                 $('#elem-' + cant_elems).append('<td>' + formato + '</td>');
                 $('#elem-' + cant_elems).append('<td>' + cantidad + '</td>');
                 $('#elem-' + cant_elems).append('<td>' + precio + '</td>');
-                $('#elem-' + cant_elems).append('<td><div class="btn-group" role="group" aria-label="Basic example"><button type="button" class="btn btn-outline-success edit-btn"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger elim-btn"><i class="bi bi-eraser"></i></button></div></td>');
+                $('#elem-' + cant_elems).append('<td><div class="btn-group" role="group"><button type="button" data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-outline-success edit-btn"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger elim-btn"><i class="bi bi-eraser"></i></button></div></td>');
 
                 $(".edit-btn").click(function() {
                     opcion = 2;
                     fila = $(this).closest("tr");
+                    $('#form').trigger("reset");
+                    validation.resetForm();
                     $('#nombre_gen').val(fila.find('th:eq(0)').text());
                     $('#nombre').val(fila.find('td:eq(0)').text());
                     $('#formato').val(fila.find('td:eq(1)').text());
                     $('#cant').val(parseInt(fila.find('td:eq(2)').text()));
                     $('#precio').val(parseFloat(fila.find('td:eq(3)').text()));
-                    $('#formModal').modal('show');
 
                     resta = parseInt(fila.find('td:eq(2)').text()) * parseFloat(fila.find('td:eq(3)').text()); //Se almacena el valor que se debera restar al total
                 });
@@ -81,8 +91,6 @@ $(document).ready(function() {
             total = total + parseInt(cantidad) * parseFloat(precio); //Se suma al total el nuevo producto
             $('#total').text(total);
             $('#formModal').modal('hide');
-            $('#form').trigger("reset");
-            validation.resetForm();
         }
     });
 });
