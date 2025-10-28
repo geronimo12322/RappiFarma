@@ -1,5 +1,5 @@
 <?php
-if (strtolower($_SERVER['REQUEST_URI']) != "/rappifarma/presupuestos.php" && strtolower($_SERVER['REQUEST_URI']) != "/rappifarma/pedidos.php") {
+if (substr(strtolower($_SERVER['REQUEST_URI']), 0, 27) != "/rappifarma/presupuesto.php" && substr(strtolower($_SERVER['REQUEST_URI']), 0, 28) != "/rappifarma/presupuestos.php" && substr(strtolower($_SERVER['REQUEST_URI']), 0, 23) != "/rappifarma/pedidos.php") {
     header("Location: ../");
     exit;
 }
