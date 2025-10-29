@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
+    header("Location: index.php");
     exit;
 }
 ?>
@@ -13,7 +13,6 @@ if (!isset($_SESSION["user_id"])) {
   <title>Cambiar Contraseña</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Estilo general */
     body {
       font-family: Arial, sans-serif;
       background-color: #f2f2f2;
@@ -25,12 +24,11 @@ if (!isset($_SESSION["user_id"])) {
       min-height: 100vh;
     }
 
-    /* Contenedor principal */
     .container {
       background: #fff;
       width: 100%;
-      max-width: 340px; /* 🔹 un poco más angosto */
-      min-height: 440px; /* 🔹 un poco más alto */
+      max-width: 340px;
+      min-height: 480px;
       padding: 28px;
       margin: 20px;
       border-radius: 10px;
@@ -41,14 +39,28 @@ if (!isset($_SESSION["user_id"])) {
       justify-content: center;
     }
 
-    /* Título */
     h2 {
       text-align: center;
       color: #333;
       margin-bottom: 20px;
     }
 
-    /* Inputs */
+    .mensaje {
+      text-align: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    
+
     input {
       width: 100%;
       padding: 12px;
@@ -59,7 +71,6 @@ if (!isset($_SESSION["user_id"])) {
       box-sizing: border-box;
     }
 
-    /* Contenedor de botones */
     .botones {
       display: flex;
       justify-content: space-between;
@@ -67,7 +78,6 @@ if (!isset($_SESSION["user_id"])) {
       margin-top: 10px;
     }
 
-    /* Botones */
     button {
       flex: 1;
       padding: 12px;
@@ -82,7 +92,6 @@ if (!isset($_SESSION["user_id"])) {
     .btn-cambiar {
       background-color: #007bff;
     }
-
     .btn-cambiar:hover {
       background-color: #0069d9;
     }
@@ -90,49 +99,40 @@ if (!isset($_SESSION["user_id"])) {
     .btn-cancelar {
       background-color: #dc3545;
     }
-
     .btn-cancelar:hover {
       background-color: #c82333;
     }
 
-    /* Responsive para pantallas pequeñas */
     @media (max-width: 480px) {
       .container {
         max-width: 90%;
         padding: 24px;
         margin: 0 10px;
-        min-height: auto;
       }
-
-      h2 {
-        font-size: 20px;
-      }
-
-      input, button {
-        font-size: 14px;
-        padding: 10px;
-      }
-
-      .botones {
-        flex-direction: column;
-      }
-
-      .botones button {
-        width: 100%;
-      }
+      h2 { font-size: 20px; }
+      input, button { font-size: 14px; padding: 10px; }
+      .botones { flex-direction: column; }
+      .botones button { width: 100%; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Cambiar Contraseña</h2>
+
+    <!-- 🔹 Mostrar mensaje si existe -->
+    <?php if (isset($_GET['error'])): ?>
+      <div class="mensaje error"><?= htmlspecialchars($_GET['error']) ?></div>
+    <?php endif; ?>
+
     <form action="procesar_cambio_contrasena.php" method="POST">
+      <input type="password" name="contrasena_actual" placeholder="Contraseña actual" required>
       <input type="password" name="nueva_contrasena" placeholder="Nueva contraseña" required>
       <input type="password" name="repetir_contrasena" placeholder="Repetir contraseña" required>
 
       <div class="botones">
         <button type="submit" name="accion" value="cambiar" class="btn-cambiar">Cambiar</button>
-        <button type="submit" name="accion" value="cancelar" class="btn-cancelar">Cancelar</button>
+        <button type="submit" name="accion" value="cancelar" class="btn-cancelar" formnovalidate>Cancelar</button>
       </div>
     </form>
   </div>
