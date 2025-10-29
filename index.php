@@ -1,3 +1,15 @@
+<?php
+include 'login.php';
+
+session_start();
+// Si ya está logueado, redirigir a panel
+if (isset($_SESSION['user_id'])) {
+    header('Location: panel.php');
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,9 +150,10 @@
         <div class="bottom">
             <div class="form-container">
                 <h1>Ingreso a RappiFarma</h1>
-                <form action="validar_login.php" method="POST">
-                    <input type="email" name="email" placeholder="Correo electrónico" required>
-                    <input type="password" name="password" placeholder="Contraseña" required>
+                <?php if($err): ?><div class="error"><?=htmlspecialchars($err)?></div><?php endif; ?>
+                <form action="login.php" method="POST">
+                    <input class="input" type="email" name="email" placeholder="Email" required>
+                    <input class="input" type="password" name="password" placeholder="Contraseña" required>
                     <button type="submit">Ingresar</button>
                     <a href="registro.php" class="register">Registrarse</a>
                 </form>
@@ -148,6 +161,8 @@
         </div>
     </div>
 
+
+   
 
     
 </body>

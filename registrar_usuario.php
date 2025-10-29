@@ -9,6 +9,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = trim($_POST["password"]);
     $telefono = trim($_POST["telefono"]);
     $dni = trim($_POST["dni"]);
+    $provincia = trim($_POST["provincia"]);
+    $localidad = trim($_POST["localidad"]);
+    $CP = trim($_POST["CP"]);
     $direccion = trim($_POST["direccion"]);
     $tiene_obra_social = trim($_POST["tiene_obra_social"]);
     $obra_social = trim($_POST["obra_social"]);
@@ -45,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
 
     // --- Registrar usuario ---
-    $sql_insert = "INSERT INTO usuarios (nombre, apellido, email, telefono, dni, direccion, tieneObraSocial, obraSocial, nroCarnet, password) VALUES ('$nombre', '$apellido', '$email', '$telefono', '$dni', '$direccion', '$tiene_obra_social', '$obra_social', '$nro_carnet', '$password_hashed')";
+    $sql_insert = "INSERT INTO usuarios (nombre, apellido, email, telefono, dni, provincia, localidad, CP, direccion, tieneObraSocial, obraSocial, nroCarnet, password) VALUES ('$nombre', '$apellido', '$email', '$telefono', '$dni', '$provincia', '$localidad', '$CP', '$direccion', '$tiene_obra_social', '$obra_social', '$nro_carnet', '$password_hashed')";
     if ($conn->query($sql_insert) === TRUE) {
         // ✅ Redirigir correctamente (importante para evitar duplicado)
         header("Location: login.php");
