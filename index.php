@@ -1,12 +1,55 @@
 <?php
-include 'login.php';
 
-session_start();
+session_start(); 
+require_once 'conexion.php'; // asegúrate que esto define $conexion (mysqli) 
+
+
 // Si ya está logueado, redirigir a panel
 if (isset($_SESSION['user_id'])) {
-    header('Location: panel.php');
+    header('Location: home_usuario.php');
     exit;
 }
+
+$err = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if ($email === '' || $password === '') {
+        $err = "Completa email y contraseña.";
+    } else {
+        // Prepared statement para evitar SQL injection
+        $sql = "SELECT ID_Usuario, Nombre, Email, Password FROM usuarios WHERE Email = ?";
+        if ($stmt = $conexion->prepare($sql)) {
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $stmt->store_result();
+
+            if ($stmt->num_rows === 1) {
+                $stmt->bind_result($id, $nombre, $email_db, $password_hash);
+                $stmt->fetch();
+
+                // Verificar contraseña (la BD debe guardar el hash con password_hash)
+                if (password_verify($password, $password_hash)) {
+                    // Login OK: crear sesión y redirigir
+                    $_SESSION['user_id'] = $id;
+                    $_SESSION['user_name'] = $nombre;
+                    header('Location: home_usuario.php');
+                    exit;
+                } else {
+                    $err = "los datos ingresados son incorrectos";
+                }
+            } else {
+                $err = "los datos ingresados son incorrectos";
+            }
+
+            $stmt->close();
+        } else {
+            $err = "Error del servidor. Intenta más tarde.";
+        }
+    }
+}
+
 ?>
 
 
@@ -104,7 +147,7 @@ if (isset($_SESSION['user_id'])) {
 
         button {
             background-color: #ff6f00;
-            color: white;
+            color: black;
             border: none;
             padding: 12px 50px;
             border-radius: 8px;
@@ -151,7 +194,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="form-container">
                 <h1>Ingreso a RappiFarma</h1>
                 <?php if($err): ?><div class="error"><?=htmlspecialchars($err)?></div><?php endif; ?>
-                <form action="login.php" method="POST">
+                <form action="index.php" method="POST">
                     <input class="input" type="email" name="email" placeholder="Email" required>
                     <input class="input" type="password" name="password" placeholder="Contraseña" required>
                     <button type="submit">Ingresar</button>
@@ -160,10 +203,6 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </div>
     </div>
-
-
-   
-
-    
+ 
 </body>
 </html>
