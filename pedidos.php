@@ -4,7 +4,7 @@ include "includes/farm_header.php";
 include "linkDB.php";
 
 $conn = getConnection(); //Se obtiene una conexion
-$query = 'SELECT DISTINCT PE.ID_Pedido AS ID, PE.ID_Usuario AS ID_USER, CONCAT(USU.Nombre, " ", USU.Apellido) AS Nombre, USU.Provincia AS Prov, CONCAT(USU.Localidad, " (", USU.CP, ")") AS Loc, USU.Direccion AS Dir, PE.Receta AS Receta, PE.FechaCreacion AS Fecha FROM pedidos PE INNER JOIN usuarios USU LEFT JOIN presupuestos PRES ON PE.ID_Pedido = PRES.ID_Pedido AND PRES.Aceptado = 1 WHERE PRES.Aceptado IS NULL;'; //Se buscan todos los pedidos que no tengan un presupuesto aceptado
+$query = 'SELECT DISTINCT PE.ID_Pedido AS ID, PE.ID_Usuario AS ID_USER, CONCAT(USU.Nombre, " ", USU.Apellido) AS Nombre, USU.Provincia AS Prov, CONCAT(USU.Localidad, " (", USU.CP, ")") AS Loc, USU.Direccion AS Dir, PE.Receta AS Receta, PE.FechaCreacion AS Fecha FROM pedidos PE INNER JOIN usuarios USU ON PE.ID_Usuario = USU.ID_Usuario LEFT JOIN presupuestos PRES ON PE.ID_Pedido = PRES.ID_Pedido AND PRES.Aceptado = 1 WHERE PRES.Aceptado IS NULL;'; //Se buscan todos los pedidos que no tengan un presupuesto aceptado
 
 $stmt = $conn->prepare($query);
 $ret["stat"] = $stmt->execute();

@@ -67,7 +67,7 @@
             break;
         }
         case "ENVIAR_PRES": {
-            if (!empty($ID_Presupuesto) && !empty($ID_Farmacia)) {
+            if (!empty($ID_Presupuesto)) {
                 $conn = getConnection(); //Se obtiene una conexion
                 $query = 'SELECT (CASE WHEN Codigo IS NULL THEN 0 ELSE 1 END) AS Ent FROM presupuestos WHERE ID_Presupuesto = ?;'; //Se verifica que el pedido no este ya marcado como entregado
 
@@ -106,6 +106,27 @@
                     $ret["msg"] = "ERROR";
                 }
                 $stmt->close();
+            } else { //Error en los datos enviados
+                $ret["stat"] = false;
+                $ret["msg"] = "ERROR";
+            }
+            break;
+        }
+        case "BUSCAR_PRES": {
+            if (!empty($ID_Presupuesto)) {
+                $conn = getConnection(); //Se obtiene una conexion
+                $query = 'SELECT NombreGenerico, NombreComercial, Formato, Cantidad, Precio FROM productos WHERE ID_Presupuesto = ?;'; //Se verifica que el pedido no este ya marcado como entregado
+
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param('i', $ID_Presupuesto);
+                $ret["stat"] = $stmt->execute();
+
+                if ($ret["stat"]) {
+                    $res = $stmt->get_result();
+                    $ret["data"] = $res->fetch_all(MYSQLI_ASSOC);
+                } else {
+                    $ret["msg"] = "ERROR";
+                }
             } else { //Error en los datos enviados
                 $ret["stat"] = false;
                 $ret["msg"] = "ERROR";
