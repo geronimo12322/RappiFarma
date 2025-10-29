@@ -1,6 +1,8 @@
 <?php
 session_start();
-require_once 'conexion.php'; // asegúrate que esto define $conn (mysqli)
+include 'linkDB.php'; // o la ruta donde está
+$conn = getConnection();
+//require_once 'conexion.php'; // asegúrate que esto define $conn (mysqli)
 
 
 
@@ -37,10 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header('Location: panel.php');
                     exit;
                 } else {
-                    $err = "Contraseña incorrecta.";
+                    $err = "los datos ingresados son incorrectos";
                 }
             } else {
-                $err = "No existe un usuario con ese email.";
+                $err = "los datos ingresados son incorrectos";
             }
 
             $stmt->close();

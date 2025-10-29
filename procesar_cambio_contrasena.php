@@ -1,6 +1,8 @@
 <?php
 session_start();
-include('conexion.php');
+include 'linkDB.php'; // o la ruta donde está
+$conn = getConnection();
+
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit;
