@@ -1,8 +1,8 @@
 <?php
 
 session_start(); 
-require_once 'conexion.php'; // asegúrate que esto define $conexion (mysqli) 
-
+require_once 'linkDB.php'; 
+$conn = getConnection();
 
 // Si ya está logueado, redirigir a panel
 if (isset($_SESSION['user_id'])) {
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Prepared statement para evitar SQL injection
         $sql = "SELECT ID_Usuario, Nombre, Email, Password FROM usuarios WHERE Email = ?";
-        if ($stmt = $conexion->prepare($sql)) {
+        if ($stmt = $conn->prepare($sql)) {
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $stmt->store_result();
