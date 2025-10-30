@@ -4,7 +4,7 @@ include 'linkDB.php';
 $conn = getConnection();
 
 if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
+    header("Location: index.php");
     exit;
 }
 
@@ -23,9 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_usuario = $_SESSION["user_id"];
 
     // 🔹 Verificar contraseña actual
-    $sql = "SELECT Password FROM usuarios WHERE ID_Usuario = '$id_usuario'";
-    $result = $conn->query($sql);
-
+    $sql = "SELECT Password FROM usuarios WHERE ID_Usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
     if (!$result || $result->num_rows !== 1) {
         header("Location: cambiar_contrasena.php?error=Error al verificar el usuario");
         exit;
@@ -63,14 +66,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 🔹 Encriptar y actualizar
     $password_hashed = password_hash($nueva, PASSWORD_DEFAULT);
-    $sql_update = "UPDATE usuarios SET Password = '$password_hashed' WHERE ID_Usuario = '$id_usuario'";
+    $sql_update = "UPDATE usuarios SET Password = ? WHERE ID_Usuario = ?";
+    $stmt_update = $conn->prepare($sql_update);
+    $stmt_update->bind_param("si", $password_hashed, $id_usuario);
 
-    if ($conn->query($sql_update) === TRUE) {
+    if ($stmt_update->execute()) {
         header("Location: home_usuario.php");
         exit;
     } else {
         header("Location: cambiar_contrasena.php?error=Error al cambiar la contraseña");
         exit;
     }
+
+    $stmt_update->close();
+    $conn->close();
 }
 ?>

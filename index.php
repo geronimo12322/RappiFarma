@@ -1,14 +1,22 @@
 <?php
-
-session_start(); 
-require_once 'linkDB.php'; 
+session_start();
+include 'linkDB.php'; // o la ruta donde está
 $conn = getConnection();
+//require_once 'conexion.php'; // asegúrate que esto define $conn (mysqli)
 
-// Si ya está logueado, redirigir a panel
+
+
+
+// Si ya está logueado, redirigir a home-usuario
 if (isset($_SESSION['user_id'])) {
-    header('Location: home_usuario.php');
+        header('Location: home_usuario.php');
     exit;
 }
+if (isset($_SESSION['farmacia_id'])) {
+        header('Location: pedidos.php');
+    exit;
+}
+
 
 $err = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email === '' || $password === '') {
         $err = "Completa email y contraseña.";
     } else {
-        // Prepared statement para evitar SQL injection
-        $sql = "SELECT ID_Usuario, Nombre, Email, Password FROM usuarios WHERE Email = ?";
-        if ($stmt = $conn->prepare($sql)) {
+        // 🔹 Primero buscar en tabla de usuarios
+        $sql_usuario = "SELECT ID_Usuario AS id, Nombre, Email, Password FROM usuarios WHERE Email = ?";
+        if ($stmt = $conn->prepare($sql_usuario)) {
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $stmt->store_result();
@@ -28,28 +36,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->num_rows === 1) {
                 $stmt->bind_result($id, $nombre, $email_db, $password_hash);
                 $stmt->fetch();
-
-                // Verificar contraseña (la BD debe guardar el hash con password_hash)
+                
                 if (password_verify($password, $password_hash)) {
-                    // Login OK: crear sesión y redirigir
                     $_SESSION['user_id'] = $id;
                     $_SESSION['user_name'] = $nombre;
+                    $_SESSION['tipo'] = 'usuario';
                     header('Location: home_usuario.php');
                     exit;
                 } else {
-                    $err = "los datos ingresados son incorrectos";
+                    $err = "Los datos ingresados son incorrectos.";
                 }
             } else {
-                $err = "los datos ingresados son incorrectos";
-            }
+                // 🔹 Si no es usuario, probar si es farmacia
+                
+                $sql_farmacia = "SELECT ID_Farmacia AS id, Direccion, Email, Password FROM farmacias WHERE Email = ?";
+                if ($stmt2 = $conn->prepare($sql_farmacia)) {
+                    $stmt2->bind_param('s', $email);
+                    $stmt2->execute();
+                    $stmt2->store_result();
 
+                    if ($stmt2->num_rows === 1) {
+                        $stmt2->bind_result($id, $direccion, $email_db, $password_hash);
+                        $stmt2->fetch();
+                        var_dump($email_db, $password_hash, $password);
+                        if (password_verify($password, $password_hash)) {
+                            $_SESSION['farmacia_id'] = $id;
+                            $_SESSION['farmacia_direccion'] = $direccion;
+                            $_SESSION['tipo'] = 'farmacia';
+                            header('Location: pedidos.php');
+                            exit;
+                        } else {
+                            $err = "Los datos ingresados son incorrectos.";
+                        }
+                    } else {
+                        $err = "Los datos ingresados son incorrectos.";
+                    }
+
+                    $stmt2->close();
+                }
+            }
             $stmt->close();
         } else {
             $err = "Error del servidor. Intenta más tarde.";
         }
     }
 }
-
 ?>
 
 
@@ -97,16 +128,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .top {
-            flex: 35%;
+            flex: 20%;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 30px; /* Espacio desde arriba */
+            padding-top: 0px; /* Espacio desde arriba */
         }
 
         .top img {
-            width: 28%;
-            max-width: 280px;
+            margin-top: 30px;
+            width: 20%;
+            max-width: 200px;
             height: auto;
         }
 
@@ -115,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 40px; /* separa el formulario del logo */
+            padding-top: 30px; /* separa el formulario del logo */
             padding-bottom: 60px; /* 👈 deja espacio al fondo */
         }
 
@@ -125,7 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 18px;
             box-shadow: 0 6px 28px rgba(0,0,0,0.25);
             text-align: center;
-            min-width: 400px;
+            width: 90%;
+            max-width: 320px;
         }
 
         h1 {
@@ -203,6 +236,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
- 
+
+
+   
+
+    
 </body>
 </html>

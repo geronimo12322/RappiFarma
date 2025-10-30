@@ -44,8 +44,8 @@
     .container {
       background: #fff;
       width: 70%;
-      max-height: 75%;
-      overflow-y: auto;
+      max-height: 100%;
+
       margin: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -112,28 +112,52 @@
     }
 
     /* Responsivo para celulares */
-    @media (max-width: 480px) {
-      body {
-        align-items: flex-start;
-        padding-top: 30px;
-      }
+@media (max-width: 480px) {
+  body {
+    align-items: flex-start;
+    padding-top: 0;
+    height: auto;
+    overflow-y: auto;
+  }
 
-      .container {
-        max-width: 90%;
-        padding: 22px;
-        margin: 0 10px;
-        min-height: auto;
-      }
+  /* Ocultar fondo translúcido detrás */
+  body::before {
+    display: none;
+  }
 
-      h2 {
-        font-size: 20px;
-      }
+  .main {
+    height: auto;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+  }
 
-      input, select, button {
-        font-size: 14px;
-        padding: 10px;
-      }
-    }
+  .container {
+    width: 100%;
+    height: 100vh;          /* ocupa toda la altura visible */
+    background: white;       /* fondo blanco opaco */
+    overflow: visible;
+    border-radius: 0;
+    margin: 0;
+    box-shadow: none;
+    padding: 25px;
+    box-sizing: border-box;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input, select, button {
+    font-size: 14px;
+    padding: 10px;
+    margin: 6px 0;
+  }
+
+  label {
+    margin-top: 6px;
+  }
+}
   </style>
 </head>
 
@@ -160,21 +184,29 @@
           <option value="1">Sí</option>
         </select>
 
+
         <div id="datos_obra_social" class="oculto">
-          <input type="text" name="obra_social" placeholder="Nombre de la obra social">
-          <input type="text" name="nro_carnet" placeholder="Número de carnet">
+          <input type="text" name="obra_social" id="obra_social" placeholder="Nombre de la obra social">
+          <input type="text" name="nro_carnet" id="nro_carnet" placeholder="Número de carnet">
         </div>
 
         <script>
           const selectObraSocial = document.getElementById('tiene_obra_social');
           const datosObraSocial = document.getElementById('datos_obra_social');
+          const inputObraSocial = document.getElementById('obra_social');
+          const inputNroCarnet = document.getElementById('nro_carnet');
 
-          // Escucha cuando el usuario cambia el valor del select
           selectObraSocial.addEventListener('change', function() {
             if (this.value === '1') {
               datosObraSocial.classList.remove('oculto'); // muestra los campos
+              inputObraSocial.required = true;
+              inputNroCarnet.required = true;
             } else {
               datosObraSocial.classList.add('oculto'); // los oculta
+              inputObraSocial.required = false;
+              inputNroCarnet.required = false;
+              inputObraSocial.value = '';
+              inputNroCarnet.value = '';
             }
           });
         </script>

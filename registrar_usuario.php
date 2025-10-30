@@ -48,15 +48,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
 
     // --- Registrar usuario ---
-    $sql_insert = "INSERT INTO usuarios (nombre, apellido, email, telefono, dni, provincia, localidad, CP, direccion, tieneObraSocial, obraSocial, nroCarnet, password) VALUES ('$nombre', '$apellido', '$email', '$telefono', '$dni', '$provincia', '$localidad', '$CP', '$direccion', '$tiene_obra_social', '$obra_social', '$nro_carnet', '$password_hashed')";
-    if ($conn->query($sql_insert) === TRUE) {
-        // ✅ Redirigir correctamente (importante para evitar duplicado)
-        header("Location: login.php");
-        exit;
-    } else {
-        echo "❌ Error al registrar usuario: " . $conn->error;
+    
+   
+    if ($tiene_obra_social == '0') {
+        $obra_social = null;
+        $nro_carnet = null;
     }
-
+    $sql_insert = "INSERT INTO usuarios (nombre, apellido, email, telefono, dni, provincia, localidad, CP, direccion, tieneObraSocial, obraSocial, nroCarnet, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    if ($stmt = $conn->prepare($sql_insert)) {
+            $stmt->bind_param('sssssssssisss', $nombre, $apellido, $email, $telefono, $dni, $provincia, $localidad, $CP, $direccion, $tiene_obra_social, $obra_social, $nro_carnet, $password_hashed);
+            if ($stmt->execute()) {
+                // ✅ Registro exitoso → redirigir
+                header("Location: index.php");
+                exit;
+            } else {
+                echo "❌ Error al registrar usuario: " . $stmt->error;
+            }
+            $stmt->close();
+    } else {
+        echo "❌ Error al preparar la consulta: " . $conn->error;
+    }
+       
     $conn->close();
 }
 ?>
