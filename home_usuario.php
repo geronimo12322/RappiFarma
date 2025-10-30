@@ -4,7 +4,8 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit;
 }
-include "conexion.php";
+include "linkDB.php";
+$conn = getConnection();
 
 // Consulta para obtener productos
 $sql = "SELECT p.NombreComercial, p.NombreGenerico, p.Formato, p.Precio, p.Cantidad, p.BajoReceta 
@@ -13,7 +14,7 @@ $sql = "SELECT p.NombreComercial, p.NombreGenerico, p.Formato, p.Precio, p.Canti
         JOIN FARMACIAS f ON pr.ID_Farmacia = f.ID_Farmacia
         ORDER BY p.NombreComercial ASC";
 
-$result = $conexion->query($sql);
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="es">
