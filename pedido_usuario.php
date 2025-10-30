@@ -4,15 +4,15 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit;
 }
-include "conexion.php";
-
+include "linkDB.php";
+$conn = getConnection();
 $user_id = $_SESSION['user_id'];
 
 // Consulta para obtener los pedidos del usuario logueado
 $sql = "SELECT ID_Pedido, FechaCreacion, Receta 
         FROM PEDIDOS 
         WHERE ID_Usuario = ?";
-$stmt = $conexion->prepare($sql);
+$stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -235,3 +235,4 @@ document.addEventListener('click', function(e) {
 
 </body>
 </html>
+
