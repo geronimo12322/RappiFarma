@@ -31,16 +31,16 @@ if (substr(strtolower($_SERVER['REQUEST_URI']), 0, 27) != "/rappifarma/presupues
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="pedidos.php"><i class="bi bi-bag-check"></i> Pedidos</a>
+                        <a class="nav-link" id="link-pedidos" href="pedidos.php"><i class="bi bi-bag-check"></i> Pedidos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="presupuestos.php"><i class="bi bi-receipt"></i> Presupuestos</a>
+                        <a class="nav-link" id="link-presupuestos" href="presupuestos.php"><i class="bi bi-receipt"></i> Presupuestos</a>
                     </li>
                 </ul>
                 <div class="d-flex nav-item" role="search">
                 <ul class="navbar-nav me-auto mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Cerrar Sesion</a>
+                        <a class="nav-link text-danger" href="logout.php"><i class="bi bi-box-arrow-right"></i> Cerrar Sesion</a>
                     </li>
                 </ul>
             </div>

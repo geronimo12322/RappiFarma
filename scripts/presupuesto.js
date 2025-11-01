@@ -56,6 +56,7 @@ $(document).ready(function() {
                 var ret = JSON.parse(data);
                 if (ret['stat']) {
                     window.alert("Presupuesto cargado correctamente.");
+                    window.location.href = "index.php";
                 } else {
                     if (ret['msg'] == "OCCUPIED") {
                         window.alert("El presupuesto ya se encuentra tomado.");

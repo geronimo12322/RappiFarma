@@ -72,6 +72,10 @@ $ret["stat"] = $stmt->execute();
     </div>
 </main>
 
+<script type="text/javascript">
+$("#link-pedidos").addClass("disabled");
+</script>
+
 <?php
 include "includes/farm_footer.php";
 ?>

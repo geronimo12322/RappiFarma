@@ -111,6 +111,10 @@ $ret["stat"] = $stmt->execute();
 
 <script src="scripts/presupuestos.js"></script>
 
+<script type="text/javascript">
+$("#link-presupuestos").addClass("disabled");
+</script>
+
 <?php
 include "includes/farm_footer.php";
 ?>

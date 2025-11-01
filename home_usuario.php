@@ -190,7 +190,7 @@ $result = $conn->query($sql);
 <body>
 
 <header>
-    <img src="logo.png" alt="Logo RappiFarma">
+    <img src="icon.png" alt="Logo RappiFarma">
     <h2 class="bienvenida">Bienvenido, <?=htmlspecialchars($_SESSION['user_name'])?></h2>
 </header>
 

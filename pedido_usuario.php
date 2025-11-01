@@ -181,7 +181,7 @@ $result = $stmt->get_result();
 <body>
 
 <header>
-    <img src="logo.png" alt="Logo RappiFarma">
+    <img src="icon.png" alt="Logo RappiFarma">
     <h2>Mis Pedidos</h2>
 </header>
 

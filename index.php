@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="main">
         <div class="top">
-            <img src="logo.png" alt="Logo RappiFarma">
+            <img src="icon.png" alt="Logo RappiFarma">
         </div>
 
         <div class="bottom">
