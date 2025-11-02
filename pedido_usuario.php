@@ -96,7 +96,7 @@ $result = $stmt->get_result();
 
     .footer-container {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         position: relative;
     }
@@ -108,10 +108,8 @@ $result = $stmt->get_result();
     }
 
     .menu-footer-container {
-        position: absolute;
-        right: 30px;
-        top: 50%;
-        transform: translateY(-50%);
+       display: flex; /* Alinea los botones uno al lado del otro */
+       align-items: center;
     }
 
     .menu-icon-footer {
@@ -170,8 +168,21 @@ $result = $stmt->get_result();
     }
 
     @media (max-width: 768px) {
-        .contenedor { grid-template-columns: 1fr; }
-        .menu-desplegable { right: 20px; width: 180px; }
+       .contenedor { grid-template-columns: 1fr; }
+        .footer-text { display: none; }
+
+        .footer-container {
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn-camera { margin-right: 10px; }
+
+        .menu-desplegable {
+            right: 10px;
+            bottom: 70px; /* ✅ Menú más arriba para que no tape */
+            width: 180px;
+        }
     }
 </style>
 
@@ -210,7 +221,7 @@ if ($result->num_rows > 0) {
             <nav class="menu-desplegable" id="menuDesplegable">
                 <ul>
                     <li onclick="window.location.href='home_usuario.php'"><i class="fas fa-home"></i>Inicio</li>
-                    <li onclick="window.location.href='pedidos_usuario.php'"><i class="fas fa-box"></i>Mis Pedidos</li>
+                    <li onclick="window.location.href='pedidos_usuario.php'"><i class="fas fa-box"></i>Mi Cuenta</li>
                     <li onclick="window.location.href='logout.php'"><i class="fas fa-power-off"></i>Cerrar Sesión</li>
                 </ul>
             </nav>
