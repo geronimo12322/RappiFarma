@@ -90,14 +90,14 @@ if (!isset($_SESSION["user_id"])) {
     }
 
     .btn-cambiar {
-      background-color: #007bff;
+      background-color: #ff6f00;
     }
     .btn-cambiar:hover {
       background-color: #0069d9;
     }
 
     .btn-cancelar {
-      background-color: #dc3545;
+      background-color: #000000;
     }
     .btn-cancelar:hover {
       background-color: #c82333;

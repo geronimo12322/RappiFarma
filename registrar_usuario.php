@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'linkDB.php'; // o la ruta donde está
 $conn = getConnection();
 
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // --- Validar formato de email ---
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "❌ El email ingresado no es válido.";
+        header("Location: registro.php?error=El+email+ingresado+no+es+valido");
         exit;
     }
 
@@ -29,18 +30,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $conn->query($sql_check);
 
     if ($result && $result->num_rows > 0) {
-        echo "⚠️ El email ingresado ya está en uso. Intenta con otro.";
+        header("Location: registro.php?error=El+email+ingresado+ya+esta+en+uso.+Intenta+con+otro.");
         exit;
     }
 
-    // --- Validar fortaleza de la contraseña ---
-    $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?!.*012|.*123|.*234|.*345|.*456|.*567|.*678|.*789).{8,}$/';
+    // --- Escenario 3: contraseña con menos de 8 caracteres ---
+    if (strlen($password) < 8) {
+        header("Location: registro.php?error=La+contraseña+contiene+menos+de+8+caracteres");
+        exit;
+    }
 
+    // --- Escenario 4: formato incorrecto ---
+    $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?!.*012|.*123|.*234|.*345|.*456|.*567|.*678|.*789).{8,}$/';
     if (!preg_match($regex, $password)) {
-        echo "❌ La contraseña no cumple con los requisitos:<br>
-        - Mínimo 8 caracteres<br>
-        - Al menos 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial<br>
-        - No debe contener secuencias numéricas (como 123, 456, etc.)";
+        header("Location: registro.php?error=Formato+de+contraseña+incorrecto");
         exit;
     }
 

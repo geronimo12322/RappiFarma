@@ -167,6 +167,15 @@
   <div class="main">
     <div class="container">
       <h2>Registro de Usuario</h2>
+      <?php if (isset($_GET['error'])): ?>
+              <div style="color: red; text-align: center; margin-bottom: 10px;">
+                  <?= htmlspecialchars($_GET['error']); ?>
+              </div>
+          <?php elseif (isset($_GET['exito'])): ?>
+              <div style="color: green; text-align: center; margin-bottom: 10px;">
+                  ✅ Registro exitoso
+              </div>
+          <?php endif; ?>
       <form action="registrar_usuario.php" method="POST">
         <input type="text" name="nombre" placeholder="Nombre" required>
         <input type="text" name="apellido" placeholder="Apellido" required>

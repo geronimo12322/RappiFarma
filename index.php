@@ -232,6 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input class="input" type="password" name="password" placeholder="Contraseña" required>
                     <button type="submit">Ingresar</button>
                     <a href="registro.php" class="register">Registrarse</a>
+                    <a href="recuperarcontrasena.php" class="register">Olvide mi contraseña</a>
                 </form>
             </div>
         </div>
