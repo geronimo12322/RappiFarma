@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['farmacia_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
 $title = "Cargar Presupuesto";
 $redirect_url = "index.php";
 include "includes/farm_header.php";
@@ -8,7 +14,7 @@ $db_error_msg = "Ocurrio un error inesperado.";
 $tomado_error_msg = "El pedido ya ha sido tomado.";
 $ret["msg"] = "";
 
-$ID_Farmacia = 1; //OBTENER DE PHP_SESSION
+$ID_Farmacia = intval($_SESSION['farmacia_id']);
 
 if (isset($_GET["ID"])) {
     $ID = $_GET["ID"];

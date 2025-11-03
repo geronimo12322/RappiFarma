@@ -1,11 +1,17 @@
 <?php
+session_start();
+if (!isset($_SESSION['farmacia_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
 $title = "Presupuestos Aceptados";
 include "includes/farm_header.php";
 include "linkDB.php";
 
 $ret["msg"] = "";
 
-$ID_Farmacia = 1; //OBTENER DE PHP_SESSION
+$ID_Farmacia = intval($_SESSION['farmacia_id']);
 
 echo '<script>var ID_Farmacia = ' . $ID_Farmacia . ';</script>';
 

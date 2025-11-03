@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['farmacia_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
 $title = "Pedidos";
 include "includes/farm_header.php";
 include "linkDB.php";
