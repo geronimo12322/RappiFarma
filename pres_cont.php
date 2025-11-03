@@ -11,6 +11,7 @@ $ID_Pedido = intval(isset($_POST['ID_Pedido']) ? $_POST['ID_Pedido'] : "");
 $ID_Presupuesto = intval(isset($_POST['ID_Presupuesto']) ? $_POST['ID_Presupuesto'] : "");
 $opcion = isset($_POST['opcion']) ? $_POST['opcion'] : "";
 $info = isset($_POST['info']) ? $_POST['info'] : "";
+$extra = floatval(isset($_POST['extra']) ? $_POST['extra'] : "");
 
 $ret = array();
 
@@ -28,10 +29,10 @@ switch ($opcion) {
                 $res = $stmt->get_result();
                 $fetch_res = $res->fetch_assoc();
                 if ($fetch_res["Cant"] == 0) {
-                    $query = 'INSERT INTO presupuestos(`ID_Pedido`, `ID_Farmacia`) VALUES (?, ?);'; //Se inserta primero un presupuesto
+                    $query = 'INSERT INTO presupuestos(`ID_Pedido`, `ID_Farmacia`, `Extras`) VALUES (?, ?, ?);'; //Se inserta primero un presupuesto
 
                     $stmt = $conn->prepare($query);
-                    $stmt->bind_param('ii', $ID_Pedido, $ID_Farmacia);
+                    $stmt->bind_param('iid', $ID_Pedido, $ID_Farmacia, $extra);
                     $ret["stat"] = $stmt->execute();
 
                     if ($ret["stat"]) {

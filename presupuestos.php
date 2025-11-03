@@ -61,7 +61,7 @@ $ret["stat"] = $stmt->execute();
                                                 echo '<td>' . $row["FechaEn"] . "</td>";
                                                 echo '<td>' . $row["Cod"] . "</td>";
                                                 echo '<td>' . $row["FechaE"] . "</td>";
-                                                echo '<td><div class="btn-group" role="group" id="' . $row["ID_Pres"] . '"><button ' . ($row["Cod"] != "-" ? "disabled" : "") . ' type="button" class="btn btn-outline-success send-btn"><i class="bi bi-send"></i></button><button type="button" class="btn btn-outline-primary look-btn" data-bs-toggle="modal" data-bs-target="#presModal"><i class="bi bi-search"></i></button></div></td>';
+                                                echo '<td><div class="btn-group" role="group" id="' . $row["ID_Pres"] . '"><button ' . ($row["Cod"] != "-" ? "disabled" : "") . ' type="button" class="btn btn-outline-success send-btn" title="Enviar pedido"><i class="bi bi-send"></i></button><button type="button" class="btn btn-outline-primary look-btn" data-bs-toggle="modal" data-bs-target="#presModal" title="Ver productos"><i class="bi bi-search"></i></button></div></td>';
                                                 echo '</tr>';
                                             }
                                         } else {

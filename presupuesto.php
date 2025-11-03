@@ -115,6 +115,18 @@ if (!$ret["stat"]) {
                                 <span>Total: <span id="total"></span>$</span>
                             </div>
                         </div>
+                        <form id="form_extra">
+                            <div class="row">
+                                <div class="col">
+                                    <label id="extra-error" class="error" for="extra"></label>
+                                </div>
+                                <div class="col mb-2"><br></div>
+                            </div>
+                            <div class="form-floating mb-2">
+                                <input class="form-control" placeholder="Costos Extra" type="text" id="extra" name="extra">
+                                <label for="extra">Costos Extra</label>
+                            </div>
+                        </form>
                         <div class="row">
                             <div class="col-12 d-flex justify-content-end align-items-center">
                                 <button id="conf-btn" type="button" class="btn btn-outline-success"><i class="bi bi-check-square"></i> Confirmar Presupuesto</button>
@@ -137,30 +149,30 @@ if (!$ret["stat"]) {
             <div class="modal-body">
                 <form id="form">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-11">
                             <label id="nombre_gen-error" class="error" for="nombre_gen"></label>
                         </div>
-                        <div class="col"><br></div>
+                        <div class="col-1"><br></div>
                     </div>
                     <div class="form-floating">
                         <input class="form-control" placeholder="Nombre Generico" type="text" id="nombre_gen" name="nombre_gen">
                         <label for="nombre_gen">Nombre Generico</label>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-11">
                             <label id="nombre-error" class="error" for="nombre"></label>
                         </div>
-                        <div class="col mb-2"><br></div>
+                        <div class="col-1 mb-2"><br></div>
                     </div>
                     <div class="form-floating">
                         <input class="form-control" placeholder="Nombre Comercial" type="text" id="nombre" name="nombre">
                         <label for="nombre">Nombre Comercial</label>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-11">
                             <label id="formato-error" class="error" for="formato"></label>
                         </div>
-                        <div class="col mb-2"><br></div>
+                        <div class="col-1 mb-2"><br></div>
                     </div>
                     <div class="form-floating">
                         <select class="form-select" id="formato" name="formato">
@@ -172,20 +184,20 @@ if (!$ret["stat"]) {
                         <label for="formato">Formato</label>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-11">
                             <label id="cant-error" class="error" for="cant"></label>
                         </div>
-                        <div class="col mb-2"><br></div>
+                        <div class="col-1 mb-2"><br></div>
                     </div>
                     <div class="form-floating">
                         <input class="form-control" placeholder="Cantidad" type="number" id="cant" name="cant" min="1" step="1">
                         <label for="cant" class="form-label">Cantidad</label>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-11">
                             <label id="precio-error" class="error" for="precio"></label>
                         </div>
-                        <div class="col"><br></div>
+                        <div class="col-1"><br></div>
                     </div>
                     <div class="form-floating">
                         <input class="form-control" placeholder="Precio" type="text" id="precio" name="precio">
