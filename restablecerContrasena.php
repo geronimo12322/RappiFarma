@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once "linkDB.php";
 $conn = getConnection();
 
@@ -62,12 +61,14 @@ if (!hash_equals($token_valido, $token)) {
             <input type="password" name="password2" class="form-control form-control-lg" required>
         </div>
 
-        <?php if(isset($_SESSION['error'])): ?>
-            <div class="text-danger mb-3">
-                <?= $_SESSION['error']; 
-                unset($_SESSION['error']); ?>
-            </div>
+        <?php
+        $error = $_GET['error'] ?? '';
+        if ($error): ?>
+            <p style="color:red; margin-top:10px; font-size:0.9rem; white-space: pre-line;">
+                <?= htmlspecialchars(urldecode($error)) ?>
+            </p>
         <?php endif; ?>
+
 
 
         <button type="submit" class="btn btn-primary w-100 btn-lg-custom">Cambiar contraseña</button>

@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once "linkDB.php";
 $conn = getConnection();
 
@@ -18,10 +17,11 @@ if (!$email || !$exp || !$token) {
 
 // Verificamos que las contraseñas coincidan
 if ($password !== $password2) {
-    $_SESSION['error'] = "Las contraseñas no coinciden.";
-    header("Location: restablecerContrasena.php?email=" . urlencode($email) . "&exp=$exp&token=$token");
+    $error = urlencode("Las contraseñas no coinciden.");
+    header("Location: restablecerContrasena.php?email=" . urlencode($email) . "&exp=$exp&token=$token&error=$error");
     exit;
 }
+
 
 // Validación avanzada de contraseña
 $errores = [];
@@ -56,10 +56,12 @@ for ($i = 0; $i <= 7; $i++) {
 
 // Si hay errores, volvemos al formulario, informando que la contraseña no cumple requisitos
 if (!empty($errores)) {
-    $_SESSION['error'] = "La contraseña no cumple con los requisitos:<br>- " . implode("<br>- ", $errores);
-    header("Location: restablecerContrasena.php?email=" . urlencode($email) . "&exp=$exp&token=$token");
+    $error = "La contraseña no cumple con los requisitos:\n- " . implode("\n- ", $errores);
+    $error = urlencode($error); // codificar para URL
+    header("Location: restablecerContrasena.php?email=" . urlencode($email) . "&exp=$exp&token=$token&error=$error");
     exit;
 }
+
 
 // Verificar expiración del enlace recibido por mail
 if (time() > (int)$exp) {
@@ -82,7 +84,6 @@ $stmt->bind_param("ss", $password_hash, $email);
 
 // en caso de el cambio de contraseña sea correcto redirige a index
 if ($stmt->execute()) {
-    $_SESSION['success'] = "Contraseña cambiada correctamente. Ahora podés iniciar sesión.";
     header("Location: index.php");
     exit;
 } else {

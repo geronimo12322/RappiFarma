@@ -1,5 +1,4 @@
 <?php
-session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -11,30 +10,22 @@ require_once "linkDB.php";
 
 $conn = getConnection();
 
-// Verificar que el usuario esté logueado
-if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit;
-}
 
 
-$idUsuario = $_SESSION['user_id'];
 $emailIngresado = $_POST['email'];      
 
-// Obtener el correo del usuario desde la base de datos
-$stmt = $conn->prepare("SELECT Email FROM USUARIOS WHERE ID_Usuario=?");
-$stmt->bind_param("i", $idUsuario);
+// Verificar si el email existe en la BD
+$stmt = $conn->prepare("SELECT Email FROM USUARIOS WHERE Email=?");
+$stmt->bind_param("s", $emailIngresado);
 $stmt->execute();
-$stmt->bind_result($emailUsuario);
-$stmt->fetch();
+$stmt->store_result();
+
+if ($stmt->num_rows === 0) {
+    header("Location: recuperarContrasena.php?error=correoNoExiste");
+exit;
+} 
 $stmt->close();
 
-// si el email que se esperaba y el que ingreso el usuario no son iguales devuelve error
-if ($emailIngresado != $emailUsuario) {
-    $_SESSION['error'] = "El correo no coincide con tu cuenta.";
-    header("Location: recuperarContrasena.php");
-    exit;
-}
 
 
 //  Generar token y enlace 
@@ -72,13 +63,11 @@ try {
 
     $mail->send();
 
-    $_SESSION['success'] = "Correo enviado con éxito. Revisa tu bandeja de entrada.";
-    header("Location: recuperarContrasena.php");
+    header("Location: recuperarContrasena.php?success=1");
     exit;
 
 
 } catch (Exception $e) {
-    $_SESSION['error'] = "El mail no está registrado.";
-    header("Location: recuperarContrasena.php");
+    header("Location: recuperarContrasena.php?error=emailNoEnviado");
     exit;
 }
