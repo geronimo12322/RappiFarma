@@ -1,3 +1,8 @@
+<?php
+session_start();
+$form_data = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -169,7 +174,7 @@
       <h2>Registro de Usuario</h2>
       <?php if (isset($_GET['error'])): ?>
               <div style="color: red; text-align: center; margin-bottom: 10px;">
-                  <?= htmlspecialchars($_GET['error']); ?>
+                  <?= nl2br(htmlspecialchars($_GET['error'])); ?>
               </div>
           <?php elseif (isset($_GET['exito'])): ?>
               <div style="color: green; text-align: center; margin-bottom: 10px;">
@@ -177,26 +182,26 @@
               </div>
           <?php endif; ?>
       <form action="registrar_usuario.php" method="POST">
-        <input type="text" name="nombre" placeholder="Nombre" required>
-        <input type="text" name="apellido" placeholder="Apellido" required>
-        <input type="email" name="email" placeholder="Correo electrónico" required>
-        <input type="text" name="telefono" placeholder="Teléfono" required>
-        <input type="text" name="dni" placeholder="DNI" required>
-        <input type="text" name="provincia" placeholder="Provincia" required>
-        <input type="text" name="localidad" placeholder="Localidad" required>
-        <input type="text" name="CP" placeholder="Codigo Postal" required>
-        <input type="text" name="direccion" placeholder="Dirección" required>
+        <input type="text" name="nombre" placeholder="Nombre" required value="<?= htmlspecialchars($form_data['nombre'] ?? '') ?>">
+        <input type="text" name="apellido" placeholder="Apellido" required value="<?= htmlspecialchars($form_data['apellido'] ?? '') ?>">
+        <input type="email" name="email" placeholder="Correo electrónico" required value="<?= htmlspecialchars($form_data['email'] ?? '') ?>">
+        <input type="text" name="telefono" placeholder="Teléfono" required value="<?= htmlspecialchars($form_data['telefono'] ?? '') ?>">
+        <input type="text" name="dni" placeholder="DNI" required value="<?= htmlspecialchars($form_data['dni'] ?? '') ?>">
+        <input type="text" name="provincia" placeholder="Provincia" required value="<?= htmlspecialchars($form_data['provincia'] ?? '') ?>">
+        <input type="text" name="localidad" placeholder="Localidad" required value="<?= htmlspecialchars($form_data['localidad'] ?? '') ?>">
+        <input type="text" name="CP" placeholder="Codigo Postal" required value="<?= htmlspecialchars($form_data['CP'] ?? '') ?>">
+        <input type="text" name="direccion" placeholder="Dirección" required value="<?= htmlspecialchars($form_data['direccion'] ?? '') ?>">
 
         <label>¿Tenés obra social?</label>
         <select name="tiene_obra_social" id="tiene_obra_social" required>
-          <option value="0">No</option>
-          <option value="1">Sí</option>
+          <option value="0" <?= (isset($form_data['tiene_obra_social']) && $form_data['tiene_obra_social'] == '0') ? 'selected' : '' ?>>No</option>
+          <option value="1" <?= (isset($form_data['tiene_obra_social']) && $form_data['tiene_obra_social'] == '1') ? 'selected' : '' ?>>Sí</option>
         </select>
 
 
         <div id="datos_obra_social" class="oculto">
-          <input type="text" name="obra_social" id="obra_social" placeholder="Nombre de la obra social">
-          <input type="text" name="nro_carnet" id="nro_carnet" placeholder="Número de carnet">
+          <input type="text" name="obra_social" id="obra_social" placeholder="Nombre de la obra social" value="<?= htmlspecialchars($form_data['obra_social'] ?? '') ?>">
+          <input type="text" name="nro_carnet" id="nro_carnet" placeholder="Número de carnet" value="<?= htmlspecialchars($form_data['nro_carnet'] ?? '') ?>">
         </div>
 
         <script>
@@ -227,5 +232,6 @@
       <a href="index.php" class="register">¿Ya tenes una cuenta?</a>
     </div>
   </div>
+  <?php unset($_SESSION['form_data']); ?>
 </body>
 </html>
