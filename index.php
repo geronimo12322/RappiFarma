@@ -108,16 +108,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             position: relative;
         }
 
-        /* Filtro translúcido */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(3px);
-            z-index: 0;
-        }
+        /* Filtro translúcido que cubre todo */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 0;
+  pointer-events: none;
+}
 
         .main {
             position: relative;
