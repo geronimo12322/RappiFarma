@@ -177,9 +177,18 @@ if (!$ret["stat"]) {
                     <div class="form-floating">
                         <select class="form-select" id="formato" name="formato">
                             <option value="" selected hidden>Formato</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            <option value="1">comprimidos</option>
+                            <option value="2">cápsulas</option>
+                            <option value="3">polvo</option>
+                            <option value="4">jarabe</option>
+                            <option value="5">suspensión</option>
+                            <option value="6">solución</option>
+                            <option value="7">pomada</option>
+                            <option value="8">crema</option>
+                            <option value="9">gel</option>
+                            <option value="10">inyectable</option>
+                            <option value="11">inhalable</option>
+                            <option value="12">transdérmica</option>
                         </select>
                         <label for="formato">Formato</label>
                     </div>
@@ -217,4 +226,5 @@ if (!$ret["stat"]) {
 
 <?php
 include "includes/farm_footer.php";
+
 ?>
