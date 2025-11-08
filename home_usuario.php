@@ -369,7 +369,7 @@ if ($result->num_rows > 0) {
             
             <nav class="menu-desplegable" id="menuDesplegable">
                 <ul>
-                    <li><i class="fas fa-user"></i>Mi Cuenta</li>
+                    <li onclick="window.location.href='mi_cuenta.php'"><i class="fas fa-user"></i>Mi Cuenta</li>
                     
                     <li onclick="window.location.href='pedido_usuario.php'"><i class="fas fa-box"></i>Mis Pedidos</li>
                     <li onclick="window.location.href='logout.php'"><i class="fas fa-power-off"></i>Cerrar Sesión</li>
@@ -501,3 +501,4 @@ if ($result->num_rows > 0) {
 
 </body>
 </html>
+
