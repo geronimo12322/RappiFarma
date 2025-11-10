@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $err = "Completa email y contraseña.";
     } else {
         // 🔹 Primero buscar en tabla de usuarios
-        $sql_usuario = "SELECT ID_Usuario AS id, Nombre, Email, Password FROM usuarios WHERE Email = ?";
+        $sql_usuario = "SELECT ID_Usuario AS id, Nombre, Email, Password FROM usuarios WHERE Email = ? AND Estado = 'Activo'";
         if ($stmt = $conn->prepare($sql_usuario)) {
             $stmt->bind_param('s', $email);
             $stmt->execute();
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 // 🔹 Si no es usuario, probar si es farmacia
                 
-                $sql_farmacia = "SELECT ID_Farmacia AS id, Direccion, Email, Password FROM farmacias WHERE Email = ? AND Estado = 'Activo'";
+                $sql_farmacia = "SELECT ID_Farmacia AS id, Direccion, Email, Password FROM farmacias WHERE Email = ?";
                 if ($stmt2 = $conn->prepare($sql_farmacia)) {
                     $stmt2->bind_param('s', $email);
                     $stmt2->execute();
