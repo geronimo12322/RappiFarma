@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 // 🔹 Si no es usuario, probar si es farmacia
                 
-                $sql_farmacia = "SELECT ID_Farmacia AS id, Direccion, Email, Password FROM farmacias WHERE Email = ?";
+                $sql_farmacia = "SELECT ID_Farmacia AS id, Direccion, Email, Password FROM farmacias WHERE Email = ? AND Estado = 'Activo'";
                 if ($stmt2 = $conn->prepare($sql_farmacia)) {
                     $stmt2->bind_param('s', $email);
                     $stmt2->execute();
