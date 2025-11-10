@@ -15,7 +15,6 @@ $mensaje = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
     $apellido = trim($_POST["apellido"]);
-    $email = trim($_POST["email"]);
     $telefono = trim($_POST["telefono"]);
     $dni = trim($_POST["dni"]);
     $provincia = trim($_POST["provincia"]);
@@ -32,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $sql_update = "UPDATE usuarios 
-        SET Nombre = ?, Apellido = ?, Email = ?, Telefono = ?, DNI = ?, Provincia = ?, Localidad = ?, CP = ?, Direccion = ?, 
+        SET Nombre = ?, Apellido = ?, Telefono = ?, DNI = ?, Provincia = ?, Localidad = ?, CP = ?, Direccion = ?, 
             TieneObraSocial = ?, ObraSocial = ?, NroCarnet = ?
         WHERE ID_Usuario = ?";
 
@@ -41,7 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'sssssssssissi',
             $nombre,
             $apellido,
-            $email,
             $telefono,
             $dni,
             $provincia,
