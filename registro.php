@@ -11,6 +11,7 @@ $form_data = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
+
     /* Estilo general */
 body {
   font-family: "Segoe UI", Arial, sans-serif;
@@ -264,6 +265,7 @@ button:hover {
           </script>
 
           <input type="password" name="password" placeholder="Contraseña" required>
+          <input type="password" name="confirm_password" placeholder="Contraseña" required>
           
           <button type="submit">Registrarme</button>
           <a href="index.php" class="register">¿Ya tenes una cuenta?</a>

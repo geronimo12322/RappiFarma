@@ -3,6 +3,14 @@ session_start();
 include 'linkDB.php'; // o la ruta donde está
 $conn = getConnection();
 
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
+
+// // Incluimos PHPMailer
+// require 'PHPMailer/src/Exception.php';
+// require 'PHPMailer/src/PHPMailer.php';
+// require 'PHPMailer/src/SMTP.php';
+// require_once "linkDB.php";
 
 
 
@@ -13,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $apellido = trim($_POST["apellido"]);
     $email = trim($_POST["email"]);
     $password = trim($_POST["password"]);
+    $confirm_password = trim($_POST["confirm_password"]);
     $telefono = trim($_POST["telefono"]);
     $dni = trim($_POST["dni"]);
     $provincia = trim($_POST["provincia"]);
@@ -22,6 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tiene_obra_social = trim($_POST["tiene_obra_social"]);
     $obra_social = trim($_POST["obra_social"]);
     $nro_carnet = trim($_POST["nro_carnet"]);
+
+
+    
+
+
 
 
     $_SESSION['form_data'] = $_POST;
@@ -61,8 +75,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
+    
+
     // --- Encriptar contraseña ---
     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+    
+    // --- Verificar que las contraseñas coincidan ---
+    if ($password !== $confirm_password) {
+        header("Location: registro.php?error=Las+contraseñas+no+coinciden");
+        exit;
+    }
 
     // --- Registrar usuario ---
     
@@ -74,6 +96,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql_insert = "INSERT INTO usuarios (nombre, apellido, email, telefono, dni, provincia, localidad, CP, direccion, tieneObraSocial, obraSocial, nroCarnet, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = $conn->prepare($sql_insert)) {
             $stmt->bind_param('sssssssssisss', $nombre, $apellido, $email, $telefono, $dni, $provincia, $localidad, $CP, $direccion, $tiene_obra_social, $obra_social, $nro_carnet, $password_hashed);
+            
+            
+            // //  Generar token y enlace 
+            // $secret = "fS8#k2!9zR7bLx@qP4vT";        // clave para HMAC
+            // $expiracion = time() + 900;          // 15 minutos
+            // $data = $email . '|' . $expiracion;
+            // $token = hash_hmac('sha256', $data, $secret);
+            // $enlace = "http://localhost/RappiFarma-main/ConfirmarCorreo.php?email=" 
+            //     . urlencode($email) . "&exp=" . $expiracion . "&token=" . $token;
+
+
+            // $mail = new PHPMailer(true);
+            // try {
+            //     $mail->isSMTP();
+            //     $mail->Host       = 'smtp.gmail.com';
+            //     $mail->SMTPAuth   = true;
+            //     $mail->Username   = 'rappifarm4@gmail.com';    
+            //     $mail->Password   = 'lgqu imbb scka owhh';     // contraseña de aplicación
+            //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            //     $mail->Port       = 465;
+
+            //     $mail->setFrom('rappifarm4@gmail.com', 'RappiFarma2');
+            //     $mail->addAddress($email);
+
+            //     $mail->isHTML(true);
+            //     $mail->Subject = 'Recuperación de contraseña RappiFarma';
+            //     $mail->Body = "
+            //         <p>Hola,</p>
+            //         <p>Haz click en el siguiente enlace para restablecer tu contraseña (válido por 15 minutos):</p>
+            //         <p><a href='$enlace'>$enlace</a></p>
+            //         <p>Si no solicitaste este cambio, ignora este correo.</p>
+            //     ";
+
+            //     $mail->send();
+
+            //     header("Location: registro.php?success=1");
+            //     exit;
+            // } catch (Exception $e) {
+            //     header("Location: registro.php?error=emailNoEnviado");
+            //     exit;
+            // }
+            
             if ($stmt->execute()) {
                 // ✅ Registro exitoso → redirigir
                 unset($_SESSION['form_data']);
