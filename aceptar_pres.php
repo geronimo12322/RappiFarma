@@ -13,6 +13,10 @@ $id_presupuesto = (int)$_GET['id_pres'];
 $id_pedido = (int)$_GET['id_pedido'];
 $user_id = $_SESSION['user_id'];
 
+if (empty($id_pedido) || empty($id_presupuesto)) {
+    header('Location: index.php');
+}
+
 // 1. Obtener cantidad de presupuestos aceptados con ese ID de pedido
 $sql_presupuesto = "
     SELECT 
