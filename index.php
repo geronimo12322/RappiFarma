@@ -229,6 +229,11 @@ body::before {
             <div class="form-container">
                 <h1>Ingreso a RappiFarma</h1>
                 <?php if($err): ?><div class="error"><?=htmlspecialchars($err)?></div><?php endif; ?>
+                <?php if (isset($_GET['exito'])): ?>
+                    <div style="color: green; text-align: center; margin-bottom: 10px;">
+                        ✅ Registro exitoso
+                    </div>
+                <?php endif; ?>
                 <form action="index.php" method="POST">
                     <input class="input" type="email" name="email" placeholder="Email" required>
                     <input class="input" type="password" name="password" placeholder="Contraseña" required>

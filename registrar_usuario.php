@@ -51,11 +51,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // --- Verificar si el email ya está registrado ---
-    $sql_check = "SELECT * FROM usuarios WHERE email = '$email'";
-    $result = $conn->query($sql_check);
+    // --- Verificar si el email ya está registrado en usuarios ---
+    $sql_check_usuarios = "SELECT * FROM usuarios WHERE email = '$email'";
+    $result_usuarios = $conn->query($sql_check_usuarios);
 
-    if ($result && $result->num_rows > 0) {
+    // --- Verificar si el email ya está registrado en farmacias ---
+    $sql_check_farmacias = "SELECT * FROM farmacias WHERE email = '$email'";
+    $result_farmacias = $conn->query($sql_check_farmacias);
+
+    if (($result_usuarios && $result_usuarios->num_rows > 0) || ($result_farmacias && $result_farmacias->num_rows > 0)) {
         header("Location: registro.php?error=El+email+ingresado+ya+esta+en+uso.+Intenta+con+otro.");
         exit;
     }
@@ -141,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($stmt->execute()) {
                 // ✅ Registro exitoso → redirigir
                 unset($_SESSION['form_data']);
-                header("Location: index.php");
+                header("Location: index.php?exito");
                 exit;
             } else {
                 header("Location: registro.php?error=Error+al+registrar+usuario");
