@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt = $conn->prepare($sql_update)) {
         $stmt->bind_param(
-            'sssssssssissi',
+            'ssssssssissi',
             $nombre,
             $apellido,
             $telefono,
