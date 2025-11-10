@@ -18,11 +18,31 @@ if (!isset($_SESSION['user_id'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body { background-color: #ff6f00; }
-          .mensaje-eliminar {
+        body { background-color: #FFFFFF; }
+
+        .logo {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 55px; /* tamaño chico */
+        }
+
+        .mensaje-eliminar {
             font-size: 0.85rem;
             color: #000;
             font-weight: 500;
+        }
+        .barra-logo {
+    width: 100%;
+    background-color: #0277bd; /* azul */
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+.logo {
+    width: 55px;
 }
 
     </style>
@@ -30,9 +50,23 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
 
-<div class="container d-flex flex-column justify-content-center align-items-center min-vh-100">
-    <div class="card shadow p-4 text-center" style="max-width: 430px; width: 100%;">
-        
+<!-- LOGO ARRIBA A LA IZQUIERDA -->
+<div class="barra-logo">
+    <img src="icon.png" alt="Logo" class="logo">
+</div>
+
+
+<div class="container d-flex flex-column justify-content-center align-items-center"
+     style="min-height: calc(100vh - 100px); ">
+
+
+
+
+    <div class="card shadow pt-4 pb-4 px-1 text-center"
+        style="width: min(90%, 420px);">
+
+
+
         <h4 class="fw-bold text-danger">¿Estás seguro de que querés eliminar tu cuenta?</h4>
         <p class="mt-2 mb-4">
             No podrás recuperarla después 😥
@@ -43,6 +77,7 @@ if (!isset($_SESSION['user_id'])) {
 
             <div class="mb-3 text-start">
                 <label class="form-label">Ingresá tu contraseña para continuar</label>
+
                 <input type="password" class="form-control" name="passwordConfirm" required placeholder="Contraseña">
 
                 <?php if (isset($_SESSION['error'])): ?>
@@ -54,7 +89,11 @@ if (!isset($_SESSION['user_id'])) {
             <p class="mensaje-eliminar mb-3">
                Esta acción es <b>irreversible</b>. Se eliminarán todos tus datos.
             </p>
-            <button type="submit" class="btn btn-danger w-100">Continuar</button>
+            <button type="submit" class="btn w-100"
+                style="background-color:#ff6f00; color:black; border:none;">
+            Continuar
+            </button>       
+
         </form>
 
         <a href="home_usuario.php" class="btn btn-outline-secondary w-100 mt-3">

@@ -12,7 +12,8 @@ $conn = getConnection();
 
 
 
-$emailIngresado = $_POST['email'];      
+$emailIngresado = $_POST['email'];
+      
 
 // Verificar si el email existe en la BD
 $stmt = $conn->prepare("SELECT Email FROM USUARIOS WHERE Email=?");
@@ -41,16 +42,17 @@ $enlace = "http://localhost/RappiFarma-main/restablecerContrasena.php?email="
 $mail = new PHPMailer(true);
 
 try {
+
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'RappiFarm4@gmail.com';      // Gmail de rappifarm
-    $mail->Password   = 'lwkd dxqn zsbc fwgn';       // contraseña de gmail
-    $mail->SMTPSecure = 'tls';
-    $mail->Port       = 587;
+    $mail->Username   = 'rappifarm4@gmail.com';    
+    $mail->Password   = 'lgqu imbb scka owhh';     // contraseña de aplicación
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port       = 465;
 
-    $mail->setFrom('RappiFarm4@gmail.com', 'RappiFarma');
-    $mail->addAddress($emailIngresado); 
+    $mail->setFrom('rappifarm4@gmail.com', 'RappiFarma2');
+    $mail->addAddress($emailIngresado);
 
     $mail->isHTML(true);
     $mail->Subject = 'Recuperación de contraseña RappiFarma';
@@ -65,9 +67,9 @@ try {
 
     header("Location: recuperarContrasena.php?success=1");
     exit;
-
-
 } catch (Exception $e) {
     header("Location: recuperarContrasena.php?error=emailNoEnviado");
     exit;
 }
+
+
