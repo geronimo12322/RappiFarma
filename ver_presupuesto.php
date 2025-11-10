@@ -18,6 +18,7 @@ $user_id = $_SESSION['user_id'];
 // 1. Obtener detalles del Presupuesto, Farmacia y la Receta del Pedido
 $sql_presupuesto = "
     SELECT 
+        PR.ID_Pedido,
         PR.ID_Presupuesto, 
         PR.FechaCreacion, 
         PR.Extras, 
@@ -33,10 +34,10 @@ $sql_presupuesto = "
     JOIN 
         PEDIDOS P ON PR.ID_Pedido = P.ID_Pedido
     WHERE 
-        PR.ID_Presupuesto = ? AND P.ID_Usuario = ?"; 
+        PR.ID_Presupuesto = ?"; 
 
 $stmt_p = $conn->prepare($sql_presupuesto);
-$stmt_p->bind_param("ii", $id_presupuesto, $user_id);
+$stmt_p->bind_param("i", $id_presupuesto);
 $stmt_p->execute();
 $presupuesto = $stmt_p->get_result()->fetch_assoc();
 $stmt_p->close();
@@ -78,22 +79,25 @@ $html = '
     <h3 style="color: #e85d00; border-bottom: 2px solid #eee; padding-bottom: 10px;">Detalle del Presupuesto N° ' . $presupuesto['ID_Presupuesto'] . '</h3>
     <p><strong>Farmacia Emisora:</strong> ' . htmlspecialchars($presupuesto['Farmacia']) . '</p>
     <p><strong>Pedido Relacionado:</strong> #' . $presupuesto['ID_Pedido'] . '</p>
-    <p><strong>Fecha de Emisión:</strong> ' . $presupuesto['FechaCreacion'] . '</p>
-    
-    <div style="margin-top: 15px; padding: 10px; background-color: #f7f7f7; border-left: 5px solid #00a8e8; display: flex; align-items: center; justify-content: space-between;">
-        <strong>Receta:</strong> ';
-        
-// Lógica para mostrar el botón "Ver Receta"
-if ($receta_adjunta) {
+    <p><strong>Fecha de Emisión:</strong> ' . $presupuesto['FechaCreacion'] . '</p>';
+
+if ($presupuesto['Aceptado']) {
     $html .= '
-        <span>✅ Receta Adjunta.</span>
-        <a href="mostrar_receta.php?id=' . $presupuesto['ID_Pedido'] . '" target="_blank" style="background-color: #4caf50; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: background 0.3s;">
-            <i class="fas fa-image"></i> Ver Receta
-        </a>';
-} else {
-    $html .= '<span style="color: #e85d00; font-weight: bold;">❌ Receta No Adjunta</span>';
+        <div style="margin-top: 15px; padding: 10px; background-color: #f7f7f7; border-left: 5px solid #00a8e8; display: flex; align-items: center; justify-content: space-between;">
+            <strong>Receta:</strong> ';
+            
+    // Lógica para mostrar el botón "Ver Receta"
+    if ($receta_adjunta) {
+        $html .= '
+            <span>✅ Receta Adjunta.</span>
+            <a href="mostrar_receta.php?id=' . $presupuesto['ID_Pedido'] . '" target="_blank" style="background-color: #4caf50; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: background 0.3s;">
+                <i class="fas fa-image"></i> Ver Receta
+            </a>';
+    } else {
+        $html .= '<span style="color: #e85d00; font-weight: bold;">❌ Receta No Adjunta</span>';
+    }
+    $html .= '</div>';
 }
-$html .= '</div>';
 // FIN DEL BLOQUE DE RECETA
 
 $html .= '
@@ -137,9 +141,12 @@ $html .= '
         <p style="font-size: 1.3em; font-weight: bold; color: #000;">TOTAL FINAL: <span style="color: #e85d00;">$' . number_format($total_final, 2, ',', '.') . '</span></p>
     </div>
     
-    <div style="margin-top: 25px; padding: 10px; background-color: #f0fff0; border: 1px solid #4caf50;">
-        <strong>Estado del Pedido:</strong> ' . ($presupuesto['Entregado'] ? '✅ Entregado con éxito.' : '🚚 Enviado / ' . ($presupuesto['Aceptado'] ? 'Aceptado.' : 'Pendiente.')) . '
-    </div>';
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 25px; padding: 10px; background-color: '.($presupuesto['Aceptado'] ? '#f0fff0' : '#fff0f0').'; border: 1px solid '.($presupuesto['Aceptado'] ? '#4caf50' : '#af4c50').'">
+        <strong>Estado del Presupuesto:</strong> ' . ($presupuesto['Aceptado'] ? '✅ Aceptado con éxito.' : '❌ Sin aceptar') .  
+        (!$presupuesto['Aceptado'] ? '<a href="aceptar_pres.php?id_pres=' . $presupuesto['ID_Presupuesto'] . '&id_pedido=' . $presupuesto['ID_Pedido'] . '" style="background-color: #4caf50; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: background 0.3s;">
+            <i class="fas fa-image"></i> Aceptar Presupuesto
+        </a>' : '') .
+        '</div>';
 
 echo $html;
 

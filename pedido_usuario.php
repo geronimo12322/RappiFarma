@@ -9,11 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 include "linkDB.php"; 
 $conn = getConnection();
 $user_id = $_SESSION['user_id'];
-$url_gestion_pres = "test.php";
+$url_gestion_pres = "presupuestos_usuario.php";
 
-// Consulta para obtener todos los presupuestos asociados a los pedidos del usuario
+// Consulta para obtener todos los pedidos asociados del usuario que tengan un presupuesto asignado
 $sql = "
-    SELECT 
+    SELECT
         P.ID_Pedido, 
         P.Receta,
         PR.ID_Presupuesto,
@@ -40,22 +40,22 @@ $sql = "
         ) AS TotalPresupuesto
     FROM 
         PEDIDOS P
-    JOIN 
+    INNER JOIN 
         PRESUPUESTOS PR ON P.ID_Pedido = PR.ID_Pedido
     JOIN 
         FARMACIAS F ON PR.ID_Farmacia = F.ID_Farmacia
     WHERE 
-        P.ID_Usuario = ?
+        P.ID_Usuario = ? AND PR.Aceptado = 1
     GROUP BY
     	P.ID_Pedido
     ORDER BY 
-        PR.FechaCreacion DESC"; 
+        P.FechaCreacion DESC"; 
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$stmt->close();// Consulta para obtener todos los presupuestos asociados a los pedidos del usuario
+$stmt->close();
 
 // Separar los resultados en Entregados y Pendientes
 $delivered_budgets = [];
@@ -68,6 +68,39 @@ if ($result->num_rows > 0) {
         } else {
             $pending_budgets[] = $row;
         }
+    }
+} 
+
+// Solo pedidos creados que no poseen presupuestos aceptados
+$sql = "
+    SELECT
+        P.ID_Pedido,
+        PR.Aceptado,
+        P.FechaCreacion
+    FROM 
+        PEDIDOS P
+    LEFT JOIN 
+        PRESUPUESTOS PR ON P.ID_Pedido = PR.ID_Pedido AND PR.Aceptado = 1
+    WHERE 
+        P.ID_Usuario = ?
+    GROUP BY
+    	P.ID_Pedido
+    HAVING
+    	(case when PR.Aceptado = 1 then count(PR.Aceptado) else -1 end) = -1
+    ORDER BY 
+        P.FechaCreacion DESC"; 
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$stmt->close();
+
+$no_asigned_budgets = [];
+
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $no_asigned_budgets[] = $row;
     }
 }
 
@@ -218,46 +251,53 @@ if ($result->num_rows > 0) {
     }
     ?>
     </div>
-    
-    <h2 class="section-title">⏳ Pedidos Pendientes / En Proceso (<?php echo count($pending_budgets); ?>)</h2>
+
+    <h2 class="section-title">⏳ Pedidos Pendientes de Aceptacion (<?php echo count($no_asigned_budgets); ?>)</h2>
     <div class="contenedor">
-    <?php 
+    <?php
+    if (!empty($no_asigned_budgets)) {
+        foreach($no_asigned_budgets as $row) {
+            echo '
+            <div class="presupuesto">
+                <h3>Pedido N° '.$row['ID_Pedido'].'</h3>
+                <p><strong>Fecha Creacion:</strong> '.$row['FechaCreacion'].'</p>
+                <p><strong>Farmacia:</strong> Pendiente</p>
+                <p><strong>Fecha Aceptacion:</strong> Pendiente</p>
+                <p><strong>Fecha Envio:</strong> Pendiente</p>
+                <p><strong>Monto Total:</strong> Pendiente</p>
+                <span class="status-badge status-pendiente">Estado: Pendiente de Aceptacion</span>
+                <a href="'.$url_gestion_pres.'?id='.$row['ID_Pedido'].'" class="btn-ver">
+                    <i class="fas fa-eye"></i> Gestionar Presupuestos
+                </a>
+            </div>';
+        }
+    } else {
+        echo "<p>No tenés pedidos marcados como entregados aún.</p>";
+    }
+    ?>
+    </div>
+    
+    <h2 class="section-title">⏳ En Proceso (<?php echo count($pending_budgets); ?>)</h2>
+    <div class="contenedor">
+    <?php
     if (!empty($pending_budgets)) {
         foreach($pending_budgets as $row) {
             $total_formateado = number_format($row['TotalPresupuesto'], 2, ',', '.');
-            $estado = ($row['Aceptado'] == 1) ? "Aceptado / En Envío" : "Pendiente de Aprobación";
-            $clase_estado = ($row['Aceptado'] == 1) ? "status-aceptado" : "status-pendiente";
-
-            if ($row['Aceptado'] == 1) {
-                echo '
-                <div class="presupuesto">
-                    <h3>Pedido N° '.$row['ID_Pedido'].'</h3>
-                    <p><strong>Farmacia:</strong> '.$row['Farmacia'].'</p>
-                    <p><strong>Fecha Creacion:</strong> '.$row['FechaCreacion'].'</p>
-                    <p><strong>Fecha Aceptacion:</strong> '.$row['FechaAceptacion'].'</p>
-                    <p><strong>Fecha Envio:</strong> '.(empty($row['FechaEnvio']) ? "Pendiente" : $row['FechaEnvio']).'</p>
-                    <p><strong>Monto Total:</strong> $'.$total_formateado.'</p>
-                    <span class="status-badge '.$clase_estado.'">Estado: '.$estado.'</span>
-                
-                    <a href="#" class="btn-ver" onclick="openModal('.$row['ID_Presupuesto'].'); return false;">
-                        <i class="fas fa-eye"></i> Ver Presupuesto
-                    </a>
-                </div>';
-            } else {
-                echo '
-                <div class="presupuesto">
-                    <h3>Pedido N° '.$row['ID_Pedido'].'</h3>
-                    <p><strong>Farmacia:</strong> Pendiente</p>
-                    <p><strong>Fecha Creacion:</strong> '.$row['FechaCreacion'].'</p>
-                    <p><strong>Fecha Aceptacion:</strong> Pendiente</p>
-                    <p><strong>Fecha Envio:</strong> Pendiente</p>
-                    <p><strong>Monto Total:</strong> Pendiente</p>
-                    <span class="status-badge '.$clase_estado.'">Estado: '.$estado.'</span>
-                    <a href="'.$url_gestion_pres.'" class="btn-ver">
-                        <i class="fas fa-eye"></i> Gestionar Presupuestos
-                    </a>
-                </div>';
-            }
+            
+            echo '
+            <div class="presupuesto">
+                <h3>Pedido N° '.$row['ID_Pedido'].'</h3>
+                <p><strong>Fecha Creacion:</strong> '.$row['FechaCreacion'].'</p>
+                <p><strong>Farmacia:</strong> '.$row['Farmacia'].'</p>
+                <p><strong>Fecha Aceptacion:</strong> '.$row['FechaAceptacion'].'</p>
+                <p><strong>Fecha Envio:</strong> '.(empty($row['FechaEnvio']) ? "Pendiente" : $row['FechaEnvio']).'</p>
+                <p><strong>Monto Total:</strong> $'.$total_formateado.'</p>
+                <span class="status-badge status-aceptado">Estado: Aceptado / En Envío</span>
+            
+                <a href="#" class="btn-ver" onclick="openModal('.$row['ID_Presupuesto'].'); return false;">
+                    <i class="fas fa-eye"></i> Ver Presupuesto
+                </a>
+            </div>';
         }
     } else {
         echo "<p>No tenés pedidos pendientes o aceptados en proceso.</p>";
@@ -274,8 +314,8 @@ if ($result->num_rows > 0) {
             echo '
             <div class="presupuesto">
                 <h3>Pedido N° '.$row['ID_Pedido'].'</h3>
-                <p><strong>Farmacia:</strong> '.$row['Farmacia'].'</p>
                     <p><strong>Fecha Creacion:</strong> '.$row['FechaCreacion'].'</p>
+                    <p><strong>Farmacia:</strong> '.$row['Farmacia'].'</p>
                     <p><strong>Fecha Aceptacion:</strong> '.$row['FechaAceptacion'].'</p>
                     <p><strong>Fecha Envio:</strong> '.$row['FechaEnvio'].'</p>
                     <p><strong>Fecha Entrega:</strong> '.$row['FechaEntrega'].'</p>

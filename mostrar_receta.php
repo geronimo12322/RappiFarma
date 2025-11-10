@@ -21,10 +21,10 @@ $sql = "
     FROM 
         PEDIDOS P
     WHERE 
-        P.ID_Pedido = ? AND P.ID_Usuario = ?"; 
+        P.ID_Pedido = ?"; 
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $id_pedido, $user_id);
+$stmt->bind_param("i", $id_pedido);
 $stmt->execute();
 $result = $stmt->get_result();
 $data = $result->fetch_assoc();
