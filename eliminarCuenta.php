@@ -6,6 +6,13 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
 }
+
+// Verifica si la contraseña fue validada
+$showConfirmModal = false;
+if (isset($_SESSION['password_valid']) && $_SESSION['password_valid'] === true) {
+    $showConfirmModal = true;
+    unset($_SESSION['password_valid']); // solo se usa una vez
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,65 +26,30 @@ if (!isset($_SESSION['user_id'])) {
 
     <style>
         body { background-color: #FFFFFF; }
-
-        .logo {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            width: 55px; /* tamaño chico */
-        }
-
-        .mensaje-eliminar {
-            font-size: 0.85rem;
-            color: #000;
-            font-weight: 500;
-        }
-        .barra-logo {
-    width: 100%;
-    background-color: #0277bd; /* azul */
-    height: 80px;
-    display: flex;
-    align-items: center;
-    padding-left: 15px;
-}
-
-.logo {
-    width: 55px;
-}
-
+        .logo { position: absolute; top: 15px; left: 15px; width: 55px; }
+        .mensaje-eliminar { font-size: 0.85rem; color: #000; font-weight: 500; }
+        .barra-logo { width: 100%; background-color: #0277bd; height: 80px; display: flex; align-items: center; padding-left: 15px; }
     </style>
 </head>
 
 <body>
 
-<!-- LOGO ARRIBA A LA IZQUIERDA -->
 <div class="barra-logo">
     <img src="icon.png" alt="Logo" class="logo">
 </div>
 
-
 <div class="container d-flex flex-column justify-content-center align-items-center"
-     style="min-height: calc(100vh - 100px); ">
+     style="min-height: calc(100vh - 100px);">
 
-
-
-
-    <div class="card shadow pt-4 pb-4 px-1 text-center"
-        style="width: min(90%, 420px);">
-
-
-
+    <div class="card shadow pt-4 pb-4 px-1 text-center" style="width: min(90%, 420px);">
         <h4 class="fw-bold text-danger">¿Estás seguro de que querés eliminar tu cuenta?</h4>
-        <p class="mt-2 mb-4">
-            No podrás recuperarla después 😥
-        </p>
+        <p class="mt-2 mb-4">No podrás recuperarla después 😥</p>
 
-        <form action="eliminar_cuenta_accion.php" method="POST" class="w-100">
+        <form action="validar_contraseña.php" method="POST" class="w-100">
             <input type="hidden" name="id_usuario" value="<?= $_SESSION['user_id']; ?>">
 
             <div class="mb-3 text-start">
                 <label class="form-label">Ingresá tu contraseña para continuar</label>
-
                 <input type="password" class="form-control" name="passwordConfirm" required placeholder="Contraseña">
 
                 <?php if (isset($_SESSION['error'])): ?>
@@ -87,23 +59,62 @@ if (!isset($_SESSION['user_id'])) {
             </div>
 
             <p class="mensaje-eliminar mb-3">
-               Esta acción es <b>irreversible</b>. Se eliminarán todos tus datos.
+                Esta acción es <b>irreversible</b>. Se eliminarán todos tus datos.
             </p>
-            <button type="submit" class="btn w-100"
-                style="background-color:#ff6f00; color:black; border:none;">
-            Continuar
-            </button>       
 
+            <button type="submit" class="btn w-100" style="background-color:#ff6f00; color:black; border:none;">
+                Continuar
+            </button>
         </form>
 
-        <a href="home_usuario.php" class="btn btn-outline-secondary w-100 mt-3">
-            Cancelar
-        </a>
-
+        <a href="mi_cuenta.php" class="btn btn-outline-secondary w-100 mt-3">Cancelar</a>
     </div>
 </div>
 
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel" style="color: #000000; font-size: 1.5rem; ">
+            Confirmar eliminación
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p style="color: #dc3545; font-size: 1.2rem; font-weight: 500;">
+          ¿Estás seguro? Esta acción borrará todos tus datos de forma permanente.
+        </p>
+      </div>
+
+      <div class="modal-footer d-flex justify-content-between">
+        <!-- Botón cancelar igual que en la tarjeta -->
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+        <form action="eliminar_cuenta_accion.php" method="POST">
+            <input type="hidden" name="id_usuario" value="<?= $_SESSION['user_id']; ?>">
+            <button type="submit" class="btn" style="background-color: #ff6f00; color: #000000; ">
+                Sí, estoy seguro
+            </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<?php if($showConfirmModal): ?>
+<script>
+    // Si la contraseña fue validada, mostrar modal al cargar la página
+    var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    confirmModal.show();
+</script>
+<?php endif; ?>
 
 </body>
 </html>
