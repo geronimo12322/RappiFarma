@@ -63,17 +63,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // --- Escenario 3: contraseña con menos de 8 caracteres ---
+    // --- Escenario 4: formato incorrecto ---
     if (strlen($password) < 8) {
-        header("Location: registro.php?error=La+contraseña+contiene+menos+de+8+caracteres");
+        header("Location: registro.php?error=" . urlencode("Formato incorrecto, la contraseña debe incluir:\n- Al menos 8 caracteres\n- Al menos 1 letra mayúscula\n- Al menos 1 letra minúscula\n- Al menos 1 número\n- Al menos 1 carácter especial"));
         exit;
     }
 
-    // --- Escenario 4: formato incorrecto ---
+    
     //$regex = '/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_])(?!.*012|.*123|.*234|.*345|.*456|.*567|.*678|.*789).{8,}$/';
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?!.*012|.*123|.*234|.*345|.*456|.*567|.*678|.*789).{8,}$/';
     if (!preg_match($regex, $password)) {
-        header("Location: registro.php?error=" . urlencode("Formato incorrecto, la contraseña debe incluir:\n- Al menos 1 letra mayúscula\n- Al menos 1 letra minúscula\n- Al menos 1 número\n- Al menos 1 carácter especial"));
+        header("Location: registro.php?error=" . urlencode("Formato incorrecto, la contraseña debe incluir:\n- Al menos 8 caracteres\n- Al menos 1 letra mayúscula\n- Al menos 1 letra minúscula\n- Al menos 1 número\n- Al menos 1 carácter especial"));
         exit;
     }
 

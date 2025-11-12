@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 🔹 Escenario 1: Cancelar cambio
     if ($accion === "cancelar") {
-        header("Location: home_usuario.php");
+        header("Location: mi_cuenta.php");
         exit;
     }
 
@@ -42,15 +42,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // 🔹 Validaciones
+    // 🔹 Validaciones  
     if (strlen($nueva) < 8) {
-        header("Location: cambiar_contrasena.php?error=La nueva contraseña debe tener al menos 8 caracteres");
+        header("Location: cambiar_contrasena.php?error=" . urlencode("Formato incorrecto, la contraseña debe incluir:\n- Al menos 8 caracteres\n- Al menos 1 letra mayúscula\n- Al menos 1 letra minúscula\n- Al menos 1 número\n- Al menos 1 carácter especial"));
         exit;
     }
 
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/';
     if (!preg_match($regex, $nueva)) {
-        header("Location: cambiar_contrasena.php?error=Formato de nueva contraseña incorrecto");
+        header("Location: cambiar_contrasena.php?error=" . urlencode("Formato incorrecto, la contraseña debe incluir:\n- Al menos 8 caracteres\n- Al menos 1 letra mayúscula\n- Al menos 1 letra minúscula\n- Al menos 1 número\n- Al menos 1 carácter especial"));
         exit;
     }
 
@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update->bind_param("si", $password_hashed, $id_usuario);
 
     if ($stmt_update->execute()) {
-        header("Location: home_usuario.php");
+        header("Location: cambiar_contrasena.php?exito=Se cambio la contraseña correctamente");
         exit;
     } else {
         header("Location: cambiar_contrasena.php?error=Error al cambiar la contraseña");

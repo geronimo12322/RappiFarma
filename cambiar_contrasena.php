@@ -14,16 +14,38 @@ if (!isset($_SESSION["user_id"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background-color: #f2f2f2;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* 👈 antes era center */
-  min-height: 100vh;
+body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: url('farmacia.png') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* Filtro translúcido que cubre todo */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 0;
+  pointer-events: none;
 }
+.main {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+
+
 
     .container {
   background: rgba(255, 255, 255, 1);
@@ -58,6 +80,12 @@ if (!isset($_SESSION["user_id"])) {
       border: 1px solid #f5c6cb;
     }
 
+    .exito {
+      background-color: #f8d7da;
+      color: #23721cff;
+      border: 1px solid #f5c6cb;
+    }
+
     
 
     input {
@@ -70,37 +98,22 @@ if (!isset($_SESSION["user_id"])) {
       box-sizing: border-box;
     }
 
-    .botones {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 10px;
-    }
 
     button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.2s;
-    }
+            background-color: #ff6f00;
+            color: black;
+            border: none;
+            padding: 12px 50px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
 
-    .btn-cambiar {
-      background-color: #ff6f00;
-    }
-    .btn-cambiar:hover {
-      background-color: #0069d9;
-    }
-
-    .btn-cancelar {
-      background-color: #000000;
-    }
-    .btn-cancelar:hover {
-      background-color: #c82333;
-    }
+        button:hover {
+            background-color: #e65100;
+        }
 
     .top {
   flex: 20%;
@@ -126,18 +139,54 @@ if (!isset($_SESSION["user_id"])) {
   display: block;
   margin: 0 auto; /* centra horizontalmente */
 }
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.btn {
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+    background-color:#007b8f;
+    color:white;
+    padding:10px 20px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    text-decoration: none;
+    font-weight: bold;
+}
 
-.main {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-height: 100vh;
-  padding: 30px 0;
-  box-sizing: border-box;
+.botones-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: space-between;
+    margin-top: 0px;
+}
+
+.botones-container .btn {
+    flex: 1 1 calc(25% - 10px);
+    text-align: center;
+    text-decoration: none;
+    padding: 10px 0;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.2s ease;
+}
+
+/* Estilos por tipo */
+.btn-principal {
+    background-color: #ff6f00;
+    color: white;
+}
+.btn-principal:hover {
+    background-color: #e65100;
 }
 
     @media (max-width: 480px) {
@@ -174,6 +223,15 @@ if (!isset($_SESSION["user_id"])) {
   .bottom {
   padding-bottom: 400px;
 }
+.btn-container {
+        flex-direction: column;
+    }
+    .botones-container {
+        flex-direction: column;
+    }
+    .botones-container .btn {
+        flex: 1 1 100%;
+    }
 }
   </style>
 </head>
@@ -189,18 +247,27 @@ if (!isset($_SESSION["user_id"])) {
 
         <!-- 🔹 Mostrar mensaje si existe -->
         <?php if (isset($_GET['error'])): ?>
-          <div class="mensaje error"><?= htmlspecialchars($_GET['error']) ?></div>
-        <?php endif; ?>
+                <div style="color: red; text-align: center; margin-bottom: 10px;">
+                    <?= nl2br(htmlspecialchars($_GET['error'])); ?>
+                </div>
+            <?php elseif (isset($_GET['exito'])): ?>
+                <div style="color: green; text-align: center; margin-bottom: 10px;">
+                    <?= nl2br(htmlspecialchars($_GET['exito'])); ?>
+                </div>
+            <?php endif; ?> 
 
         <form action="procesar_cambio_contrasena.php" method="POST">
           <input type="password" name="contrasena_actual" placeholder="Contraseña actual" required>
           <input type="password" name="nueva_contrasena" placeholder="Nueva contraseña" required>
           <input type="password" name="repetir_contrasena" placeholder="Repetir contraseña" required>
+          
 
-          <div class="botones">
-            <button type="submit" name="accion" value="cambiar" class="btn-cambiar">Cambiar</button>
-            <button type="submit" name="accion" value="cancelar" class="btn-cancelar" formnovalidate>Cancelar</button>
+          <!-- 🔹 Botones -->
+          <div class="botones-container">
+              <button type="submit" name="accion" value="cambiar" class="btn btn-principal">Cambiar</button>
+              <button type="submit" name="accion" value="cancelar" class="btn btn-principal" formnovalidate>Cancelar</button>
           </div>
+
         </form>
       </div>
     </div>

@@ -1,7 +1,19 @@
 <?php
 session_start();
 $form_data = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
+
+// Si ya está logueado, redirigir a home-usuario
+if (isset($_SESSION['user_id'])) {
+        header('Location: home_usuario.php');
+    exit;
+}
+if (isset($_SESSION['farmacia_id'])) {
+        header('Location: pedidos.php');
+    exit;
+}
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
