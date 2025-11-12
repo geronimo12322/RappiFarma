@@ -31,77 +31,165 @@ if (!hash_equals($token_valido, $token)) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<style>
-    body {
-        background-color: #FFFFFF;
-        margin: 0;
-    }
 
-    .barra-logo {
-        width: 100%;
-        background-color: #0277bd;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        padding-left: 15px;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    .logo {
-        width: 55px;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: url('farmacia.png') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
 
-    .btn-orange {
-        background-color: #ff6f00;
-        color: black;
-        border: none;
-        padding: 15px;
-        font-size: 1.2rem;
-    }
-    .btn-orange:hover {
-        background-color: #e56300;
-    }
-    .formulario-restablecer {
-    padding-top: 80px; 
-    max-width: 400px;
-    margin: auto;
+        /* Filtro translúcido que cubre todo */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(3px);
+  pointer-events: none;
 }
 
+        .main {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
-</style>
+        .top {
+            flex: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 0px; /* Espacio desde arriba */
+        }
+
+        .top img {
+            margin-top: 30px;
+            width: 20%;
+            max-width: 200px;
+            height: auto;
+        }
+
+        .bottom {
+            flex: 65%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 30px; /* separa el formulario del logo */
+            padding-bottom: 60px; /* 👈 deja espacio al fondo */
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.92);
+            padding: 50px 70px;
+            border-radius: 18px;
+            box-shadow: 0 6px 28px rgba(0,0,0,0.25);
+            text-align: center;
+            width: 90%;
+            max-width: 320px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 35px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 15px auto;
+            padding: 14px;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: #ff6f00;
+            color: black;
+            border: none;
+            padding: 12px 50px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #e65100;
+        }
+
+        .register {
+            display: block;
+            margin-top: 22px;
+            font-size: 15px;
+            color: #000;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .top img {
+                width: 50%;
+            }
+            .form-container {
+                width: 90%;
+                padding: 35px;
+            }
+            input {
+                width: 90%;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/x-icon" href="icon.png">
 </head>
 <body>
+    <div class="main">
+        <div class="top">
+            <img src="icon.png" alt="Logo RappiFarma">
+        </div>
 
-<div class="barra-logo">
-    <img src="icon.png" alt="Logo" class="logo">
-</div>
-
+        <div class="bottom">
+            <div class="form-container">
+                <h1>Recuperar Contraseña</h1>
 <!-- Formulario -->
 
-    <form action="restablecerContrasenaAccion.php" method="POST" class="formulario-restablecer">
-        <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
-        <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
-        <input type="hidden" name="exp" value="<?= htmlspecialchars($exp) ?>">
+                <form action="restablecerContrasenaAccion.php" method="POST">
+                    <input class="input" type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
+                    <input class="input" type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+                    <input class="input" type="hidden" name="exp" value="<?= htmlspecialchars($exp) ?>">
 
-        <div class="mb-4 text-start">
-            <label class="form-label">Nueva contraseña</label>
-            <input type="password" name="password" class="form-control form-control-lg" required>
+                    <input class="input" type="password" placeholder="Contraseña" name="password" required>
+                    <input class="input" type="password" placeholder="Recuperar Contraseña" name="password2" required>
+
+                    <?php if (isset($_GET['error'])): ?>
+                        <p style="color:red; margin-top:10px; font-size:0.9rem; white-space: pre-line;">
+                            <?= htmlspecialchars(urldecode($_GET['error'])) ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <button type="submit" class="btn-orange w-100">Cambiar contraseña</button>
+                </form>
+
+            </div>
         </div>
+    </div>
 
-        <div class="mb-4 text-start">
-            <label class="form-label">Confirmar contraseña</label>
-            <input type="password" name="password2" class="form-control form-control-lg" required>
-        </div>
 
-        <?php if (isset($_GET['error'])): ?>
-            <p style="color:red; margin-top:10px; font-size:0.9rem; white-space: pre-line;">
-                <?= htmlspecialchars(urldecode($_GET['error'])) ?>
-            </p>
-        <?php endif; ?>
-
-        <button type="submit" class="btn-orange w-100">Cambiar contraseña</button>
-    </form>
-
-</div>
+   
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

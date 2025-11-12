@@ -3,14 +3,13 @@ session_start();
 include 'linkDB.php'; // o la ruta donde está
 $conn = getConnection();
 
-// use PHPMailer\PHPMailer\PHPMailer;
-// use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-// // Incluimos PHPMailer
-// require 'PHPMailer/src/Exception.php';
-// require 'PHPMailer/src/PHPMailer.php';
-// require 'PHPMailer/src/SMTP.php';
-// require_once "linkDB.php";
+// Incluimos PHPMailer
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
 
 
 
@@ -33,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nro_carnet = trim($_POST["nro_carnet"]);
 
 
-    
+
 
 
 
@@ -52,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // --- Verificar si el email ya está registrado en usuarios ---
-    $sql_check_usuarios = "SELECT * FROM usuarios WHERE email = '$email'";
+    $sql_check_usuarios = "SELECT * FROM usuarios WHERE email = '$email' AND Estado<>'Expirado'";
     $result_usuarios = $conn->query($sql_check_usuarios);
 
     // --- Verificar si el email ya está registrado en farmacias ---
@@ -79,11 +78,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
-    
+
 
     // --- Encriptar contraseña ---
     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
-    
+
     // --- Verificar que las contraseñas coincidan ---
     if ($password !== $confirm_password) {
         header("Location: registro.php?error=Las+contraseñas+no+coinciden");
@@ -91,8 +90,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // --- Registrar usuario ---
-    
-   
+
+
     if ($tiene_obra_social == '0') {
         $obra_social = null;
         $nro_carnet = null;
@@ -100,63 +99,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql_insert = "INSERT INTO usuarios (nombre, apellido, email, telefono, dni, provincia, localidad, CP, direccion, tieneObraSocial, obraSocial, nroCarnet, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = $conn->prepare($sql_insert)) {
             $stmt->bind_param('sssssssssisss', $nombre, $apellido, $email, $telefono, $dni, $provincia, $localidad, $CP, $direccion, $tiene_obra_social, $obra_social, $nro_carnet, $password_hashed);
-            
-            
-            // //  Generar token y enlace 
-            // $secret = "fS8#k2!9zR7bLx@qP4vT";        // clave para HMAC
-            // $expiracion = time() + 900;          // 15 minutos
-            // $data = $email . '|' . $expiracion;
-            // $token = hash_hmac('sha256', $data, $secret);
-            // $enlace = "http://localhost/RappiFarma-main/ConfirmarCorreo.php?email=" 
-            //     . urlencode($email) . "&exp=" . $expiracion . "&token=" . $token;
 
 
-            // $mail = new PHPMailer(true);
-            // try {
-            //     $mail->isSMTP();
-            //     $mail->Host       = 'smtp.gmail.com';
-            //     $mail->SMTPAuth   = true;
-            //     $mail->Username   = 'rappifarm4@gmail.com';    
-            //     $mail->Password   = 'lgqu imbb scka owhh';     // contraseña de aplicación
-            //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            //     $mail->Port       = 465;
+            //  Generar token y enlace
+            $secret = "]WE7y3UfvViwjzA+RuAk";        // clave para HMAC
+            $expiracion = time() + 900;          // 15 minutos
+            $data = $email . '|' . $expiracion;
+            $token = hash_hmac('sha256', $data, $secret);
 
-            //     $mail->setFrom('rappifarm4@gmail.com', 'RappiFarma2');
-            //     $mail->addAddress($email);
+            $enlace = "http://localhost/RappiFarma/ActivarEmail.php?email=" 
+                    . urlencode($email) . "&exp=" . $expiracion . "&token=" . $token;
 
-            //     $mail->isHTML(true);
-            //     $mail->Subject = 'Recuperación de contraseña RappiFarma';
-            //     $mail->Body = "
-            //         <p>Hola,</p>
-            //         <p>Haz click en el siguiente enlace para restablecer tu contraseña (válido por 15 minutos):</p>
-            //         <p><a href='$enlace'>$enlace</a></p>
-            //         <p>Si no solicitaste este cambio, ignora este correo.</p>
-            //     ";
+            // --- Enviar correo ---
+            $mail = new PHPMailer(true);
 
-            //     $mail->send();
+            try {
 
-            //     header("Location: registro.php?success=1");
-            //     exit;
-            // } catch (Exception $e) {
-            //     header("Location: registro.php?error=emailNoEnviado");
-            //     exit;
-            // }
-            
-            if ($stmt->execute()) {
-                // ✅ Registro exitoso → redirigir
-                unset($_SESSION['form_data']);
-                header("Location: index.php?exito");
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'rappifarm4@gmail.com';    
+                $mail->Password   = 'lgqu imbb scka owhh';     // contraseña de aplicación
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                $mail->Port       = 465;
+
+                $mail->setFrom('rappifarm4@gmail.com', 'RappiFarma2');
+                $mail->addAddress($email);
+
+                $mail->isHTML(true);
+                $mail->Subject = 'Recuperación de contraseña RappiFarma';
+                $mail->Body = "
+                    <p>Hola,</p>
+                    <p>Haz click en el siguiente enlace para restablecer tu contraseña (válido por 15 minutos):</p>
+                    <p><a href='$enlace'>$enlace</a></p>
+                    <p>Si no solicitaste este cambio, ignora este correo.</p>
+                ";
+
+                $mail->send();
+
+
+                if ($stmt->execute()) {
+                    // ✅ Registro exitoso → redirigir
+                    unset($_SESSION['form_data']);
+                    header("Location: index.php?exito");
+                    exit;
+                } else {
+                    header("Location: registro.php?error=Error+al+registrar+usuario");
+                }
                 exit;
-            } else {
-                header("Location: registro.php?error=Error+al+registrar+usuario");
-                $stmt->error;
+            } catch (Exception $e) {
+                header("Location: index.php?error=emailNoEnviado");
+                exit;
             }
-            $stmt->close();
     } else {
         header("Location: registro.php?error=Error+al+preparar+la+consulta");
-        $conn->error;
     }
-       
+
     $conn->close();
 }
 ?>

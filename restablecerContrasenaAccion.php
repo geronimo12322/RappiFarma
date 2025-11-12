@@ -84,7 +84,7 @@ $stmt->bind_param("ss", $password_hash, $email);
 
 // en caso de el cambio de contraseña sea correcto redirige a index
 if ($stmt->execute()) {
-    header("Location: index.php");
+    header("Location: index.php?exito_pass");
     exit;
 } else {
     die("Error al actualizar la contraseña.");

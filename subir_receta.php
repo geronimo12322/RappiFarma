@@ -16,8 +16,8 @@ if (!isset($_SESSION['user_id'])) {
 include "linkDB.php"; 
 $conn = getConnection();
 
-// Definimos el límite de 64 KB en bytes (constante)
-$MAX_SIZE_BYTES = 64 * 1024; 
+// Definimos el límite de 16 MB en bytes (constante)
+$MAX_SIZE_BYTES = 16 * 1024 * 1024; 
 
 // Verificación inicial de la solicitud
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivoReceta'])) {
@@ -32,13 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivoReceta'])) {
         exit;
     }
     
-    // Validar el tamaño del archivo (¡Doble chequeo de los 64 KB!)
-    if ($file['size'] > $MAX_SIZE_BYTES) {
+    // Validar el tamaño del archivo (¡Doble chequeo de los 16 MB!)
+    if ($file['size'] >= $MAX_SIZE_BYTES) {
         // La validación de JavaScript también fallará aquí, pero el servidor es la última línea de defensa.
         http_response_code(400);
         echo json_encode([
             'success' => false, 
-            'message' => 'Error: la imagen pesa más de los 64 kb.'
+            'message' => 'Error: la imagen pesa más de los 16 mb.'
         ]);
         exit;
     }

@@ -117,13 +117,11 @@ body::before {
   height: 100%;
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(3px);
-  z-index: 0;
   pointer-events: none;
 }
 
         .main {
             position: relative;
-            z-index: 1;
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -217,7 +215,7 @@ body::before {
             }
         }
     </style>
-</head>
+    <link rel="icon" type="image/x-icon" href="icon.png">
 </head>
 <body>
     <div class="main">
@@ -229,10 +227,65 @@ body::before {
             <div class="form-container">
                 <h1>Ingreso a RappiFarma</h1>
                 <?php if($err): ?><div class="error"><?=htmlspecialchars($err)?></div><?php endif; ?>
-                <?php if (isset($_GET['exito'])): ?>
+                <?php
+                if (isset($_GET['exito'])) {
+                    $msg = "✅ Registro exitoso";
+                    $title = "Usuario registrado";
+                    $body = "Su usuario se ha registrado con exito. Recibira un correo en la direccion especificada para verificar la cuenta.";
+                }
+                if (isset($_GET['exito_ver'])) {
+                    $msg = "✅ Verificacion exitosa";
+                    $title = "Correo verificado";
+                    $body = "Su correo ha sido verificado correctamente. Ingrese sus datos para iniciar sesion.";
+                }
+                if (isset($_GET['exito_pass'])) {
+                    $msg = "✅ Cambio de contraseña exitoso";
+                    $title = "Contraseña actualizada";
+                    $body = "Su contraseña se ha cambiado con exito. Ingrese las nuevas credenciales para iniciar sesion.";
+                }
+                ?>
+                <?php if (isset($_GET['exito']) || isset($_GET['exito_ver']) || isset($_GET['exito_pass'])): ?>
                     <div style="color: green; text-align: center; margin-bottom: 10px;">
-                        ✅ Registro exitoso
-                    </div>
+                        <?php echo $msg; ?>
+                    </div><!-- Modal de confirmación -->
+                        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmModalLabel" style="color: #000000; font-size: 1.5rem; ">
+                                    <?php echo $title; ?>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+
+                            <div class="modal-body text-center">
+                                <?php echo $body; ?>
+                            </div>
+
+                            <div class="modal-footer d-flex justify-content-center">
+                                <!-- Botón cancelar igual que en la tarjeta -->
+                                <button type="button" class="" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+
+                            </div>
+                        </div>
+                        </div>
+
+                        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                        <script>
+                            // Si la contraseña fue validada, mostrar modal al cargar la página
+                            var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                            confirmModal.show();
+                        </script>
+                        <script>
+                            var modal = new bootstrap.Modal(document.getElementById('successModal'));
+                            modal.show();
+
+                            document.getElementById('aceptarBtn').addEventListener('click', function() {
+                                window.location.href = 'index.php';
+                            });
+                        </script>
                 <?php endif; ?>
                 <form action="index.php" method="POST">
                     <input class="input" type="email" name="email" placeholder="Email" required>

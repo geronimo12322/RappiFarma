@@ -1,56 +1,163 @@
+<?php
+session_start();
+// Si ya está logueado, redirigir a home-usuario
+if (isset($_SESSION['user_id'])) {
+        header('Location: home_usuario.php');
+    exit;
+}
+if (isset($_SESSION['farmacia_id'])) {
+        header('Location: pedidos.php');
+    exit;
+}
+?>
 <!-- pagina de recuperar contrasena -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
 <title>Recuperar contraseña</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-    body { background-color: #D3D3D3; }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    /* ✅ Barra azul con el logo */
-    .barra-logo {
-        width: 100%;
-        background-color: #0277bd; /* azul */
-        height: 80px;
-        display: flex;
-        align-items: center;
-        padding-left: 15px;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: url('farmacia.png') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
 
-    .logo {
-        width: 55px;
-    }
+        /* Filtro translúcido que cubre todo */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 0;
+  pointer-events: none;
+}
 
-    .form-container {
-        background: #fff;
-        padding: 55px;
-        border-radius: 15px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-        max-width: 400px;
-        margin: 20px auto;      /* 🔹 bajamos un poco el contenedor para que no se pegue al borde */
-    }
+        .main {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
-    .btn-orange { background-color: #ff6f00; color: black; }
-    .btn-orange:hover { background-color: #D3D3D3; }
+        .top {
+            flex: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 0px; /* Espacio desde arriba */
+        }
 
-    .msg-error {
-        color: red;
-        font-size: 0.9rem;
-        text-align: center;
-    }
+        .top img {
+            margin-top: 30px;
+            width: 20%;
+            max-width: 200px;
+            height: auto;
+        }
+
+        .bottom {
+            flex: 65%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 30px; /* separa el formulario del logo */
+            padding-bottom: 60px; /* 👈 deja espacio al fondo */
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.92);
+            padding: 50px 70px;
+            border-radius: 18px;
+            box-shadow: 0 6px 28px rgba(0,0,0,0.25);
+            text-align: center;
+            width: 90%;
+            max-width: 320px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 35px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 15px auto;
+            padding: 14px;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: #ff6f00;
+            color: black;
+            border: none;
+            padding: 12px 50px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #e65100;
+        }
+
+        .register {
+            display: block;
+            margin-top: 22px;
+            font-size: 15px;
+            color: #000;
+            text-decoration: underline;
+        }
+        
+
+        @media (max-width: 768px) {
+            .top img {
+                width: 50%;
+            }
+            .form-container {
+                width: 90%;
+                padding: 35px;
+            }
+            input {
+                width: 90%;
+            }
+        }
+    </style>
 </style>
+<link rel="icon" type="image/x-icon" href="icon.png">
 </head>
 <body>
+<body>
+    <div class="main">
+        <div class="top">
+            <img src="icon.png" alt="Logo RappiFarma">
+        </div>
 
-<!-- ✅ Barra azul con logo -->
-<div class="barra-logo">
-    <img src="icon.png" alt="Logo" class="logo">
-</div>
+        <div class="bottom">
+            <div class="form-container">
 
-<div class="form-container text-center">
     <h3>Recuperar contraseña</h3>
     <p>Ingresa tu correo registrado y recibirás un enlace para restablecer tu contraseña.</p>
 
@@ -63,29 +170,47 @@
     <?php endif; ?>
 
     <form action="recuperarContrasenaAccion.php" method="POST">
-        <input type="email" name="email" class="form-control mb-3" placeholder="Correo electrónico" required>
-        <button type="submit" class="btn btn-orange w-100">Recuperar</button>
+        <input type="email" name="email" class="input" placeholder="Correo electrónico" required>
+        <button type="submit">Recuperar</button>
     </form>
 
-    <a href="index.php" class="d-block mt-3">Volver al login</a>
+    <a href="index.php" class="register">Volver al login</a>
 </div>
 
 <?php if (isset($_GET['success'])): ?>
-<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content text-center">
-      <div class="modal-header border-0">
-        <h5 class="modal-title text-success fw-bold">Correo enviado con éxito</h5>
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel" style="color: #000000; font-size: 1.5rem; ">
+            Correo enviado correctamente
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
-      <div class="modal-body">
-        <p>Revisa tu correo para restablecer la contraseña.</p>
-        <button id="aceptarBtn" class="btn btn-success">Aceptar</button>
+
+      <div class="modal-body text-center">
+          Se ha enviado un correo a la direccion especificada. Dirijase al link para recuperar la contraseña.
       </div>
+
+      <div class="modal-footer d-flex justify-content-center">
+        <!-- Botón cancelar igual que en la tarjeta -->
+        <button type="button" class="" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Si la contraseña fue validada, mostrar modal al cargar la página
+    var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    confirmModal.show();
+</script>
 <script>
     var modal = new bootstrap.Modal(document.getElementById('successModal'));
     modal.show();
@@ -95,6 +220,8 @@
     });
 </script>
 <?php endif; ?>
+        </div>
+    </div>
 
 </body>
 </html>

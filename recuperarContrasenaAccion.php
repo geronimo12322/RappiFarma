@@ -35,7 +35,7 @@ $expiracion = time() + 900;          // 15 minutos
 $data = $emailIngresado . '|' . $expiracion;
 $token = hash_hmac('sha256', $data, $secret);
 
-$enlace = "http://localhost/RappiFarma-main/restablecerContrasena.php?email=" 
+$enlace = "http://localhost/RappiFarma/restablecerContrasena.php?email=" 
           . urlencode($emailIngresado) . "&exp=" . $expiracion . "&token=" . $token;
 
 // --- Enviar correo ---

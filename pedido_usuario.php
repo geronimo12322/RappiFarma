@@ -80,9 +80,9 @@ $sql = "
     FROM 
         PEDIDOS P
     LEFT JOIN 
-        PRESUPUESTOS PR ON P.ID_Pedido = PR.ID_Pedido AND PR.Aceptado = 1
+        PRESUPUESTOS PR ON P.ID_Pedido = PR.ID_Pedido
     WHERE 
-        P.ID_Usuario = ?
+        P.ID_Usuario = ? AND PR.Aceptado IS NOT NULL
     GROUP BY
     	P.ID_Pedido
     HAVING

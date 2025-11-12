@@ -23,8 +23,21 @@ if (isset($_SESSION['password_valid']) && $_SESSION['password_valid'] === true) 
 
     <title>Eliminar mi cuenta</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
+        /* HEADER */
+        header {
+            background-color: #00a8e8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            position: relative;
+        }
+
+        header img {
+            height: 60px;
+        }
         body { background-color: #FFFFFF; }
         .logo { position: absolute; top: 15px; left: 15px; width: 55px; }
         .mensaje-eliminar { font-size: 0.85rem; color: #000; font-weight: 500; }
@@ -34,9 +47,9 @@ if (isset($_SESSION['password_valid']) && $_SESSION['password_valid'] === true) 
 
 <body>
 
-<div class="barra-logo">
-    <img src="icon.png" alt="Logo" class="logo">
-</div>
+<header>
+    <img src="icon.png" alt="Logo RappiFarma">
+</header>
 
 <div class="container d-flex flex-column justify-content-center align-items-center"
      style="min-height: calc(100vh - 100px);">

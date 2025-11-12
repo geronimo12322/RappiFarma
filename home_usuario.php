@@ -325,7 +325,7 @@ $result = $conn->query($sql);
             <button type="submit" id="btnConfirmar" disabled>Confirmar Carga</button>
         </form>
         <p id="mensajeCarga"></p>
-        <p style="font-size: 0.8em; color: #666;">Máximo 64 KB.</p>
+        <p style="font-size: 0.8em; color: #666;">Máximo 16 MB.</p>
     </div>
 </div>
 <div class="contenedor">
@@ -380,8 +380,8 @@ if ($result->num_rows > 0) {
 </footer>
 
 <script>
-    const MAX_SIZE_KB = 64;
-    const MAX_SIZE_BYTES = MAX_SIZE_KB * 1024; // 65536 bytes
+    const MAX_SIZE_MB = 16;
+    const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024 - 1; // 16777215 bytes
     const modal = document.getElementById('recetaModal');
     const fileInput = document.getElementById('archivoReceta');
     const btnConfirmar = document.getElementById('btnConfirmar');
