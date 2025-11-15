@@ -33,20 +33,9 @@ $presupuesto = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if ($presupuesto['Cant_PresAceptado'] == 0) {
-    // 1. Update para aceptar el presupuesto
-    $sql = "UPDATE presupuestos SET Aceptado = 1, FechaAceptacion = ? WHERE ID_Presupuesto = ?;"; 
+    header("Location: pago.php?id_pres=$id_presupuesto&id_pedido=$id_pedido");
+exit;
 
-    $fecha_act = new DateTime();
-    $fecha_str = $fecha_act->format("Y-m-d H:i:s");
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('si', $fecha_str, $id_presupuesto);
-    if ($stmt->execute()) {
-        echo'<script type="text/javascript">
-        alert("Presupuesto aceptado con exito.");
-        window.location.href="index.php";
-        </script>';
-    }
 }
 echo'<script type="text/javascript">
 alert("Ocurrio un error.");
