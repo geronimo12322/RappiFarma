@@ -124,6 +124,7 @@ $(document).ready(function() {
                     } else {
                         if (ret['msg'] == "OCCUPIED") {
                             window.alert("El presupuesto ya se encuentra tomado.");
+                            window.location.href = 'pedidos.php';
                         } else if (ret['msg'] == "ERROR") {
                             window.alert("Ocurrio un error al cargar el presupuesto.");
                         }

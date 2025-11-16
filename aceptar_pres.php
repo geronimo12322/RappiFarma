@@ -44,13 +44,13 @@ if ($presupuesto['Cant_PresAceptado'] == 0) {
     if ($stmt->execute()) {
         echo'<script type="text/javascript">
         alert("Presupuesto aceptado con exito.");
-        window.location.href="index.php";
+        window.location.href="pedido_usuario.php";
         </script>';
     }
 }
 echo'<script type="text/javascript">
 alert("Ocurrio un error.");
-window.location.href="index.php";
+window.location.href="pedido_usuario.php";
 </script>';
 $stmt->close();
 $conn->close();

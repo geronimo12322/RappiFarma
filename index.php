@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($stmt2->num_rows === 1) {
                         $stmt2->bind_result($id, $direccion, $email_db, $password_hash);
                         $stmt2->fetch();
-                        var_dump($email_db, $password_hash, $password);
                         if (password_verify($password, $password_hash)) {
                             $_SESSION['farmacia_id'] = $id;
                             $_SESSION['farmacia_direccion'] = $direccion;

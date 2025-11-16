@@ -55,7 +55,7 @@ $ret["stat"] = $stmt->execute();
                                                 $image_data = ob_get_contents();
                                                 ob_end_clean();
                                                 $image_data_base64 = base64_encode($image_data);
-                                                echo '<td><div class="btn-group" role="group"><a class="btn btn-outline-success" download="' . $row["Nombre"] . ' (Pedido).png" href="data:image/png;base64, ' . $image_data_base64 . '" title="Descargar receta"><i class="bi bi-download"></i></a><a class="btn btn-outline-primary" href="presupuesto.php?ID=' . $row["ID"] . '" title="Aceptar pedido"><i class="bi bi-clipboard-check"></i></a></div></td>';
+                                                echo '<td><div class="btn-group" role="group"><a class="btn btn-outline-success" download="' . $row["Nombre"] . ' (Pedido).png" href="data:image/png;base64, ' . $image_data_base64 . '" title="Descargar receta"><i class="bi bi-download"></i></a><a class="btn btn-outline-primary" href="presupuesto.php?ID=' . $row["ID"] . '" title="Cargar presupuesto"><i class="bi bi-clipboard-check"></i></a></div></td>';
                                                 echo '</tr>';
                                             }
                                         } else {
