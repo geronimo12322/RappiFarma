@@ -16,18 +16,20 @@ $emailIngresado = $_POST['email'];
       
 
 // Verificar si el email existe en la BD
-$stmt = $conn->prepare("SELECT Email FROM USUARIOS WHERE Email=?");
+$stmt = $conn->prepare("SELECT ID_Usuario AS ID, Email, CambiarContrasena FROM USUARIOS WHERE Email=? AND Estado='Activo'");
 $stmt->bind_param("s", $emailIngresado);
 $stmt->execute();
-$stmt->store_result();
-
-if ($stmt->num_rows === 0) {
+$result = $stmt->get_result();
+if ($result->num_rows === 0) {
     header("Location: recuperarContrasena.php?error=correoNoExiste");
-exit;
-} 
+    exit;
+}
+$row = $result->fetch_assoc();
 $stmt->close();
-
-
+if ($row['CambiarContrasena'] === 1) {
+    header("Location: recuperarContrasena.php?error=solicitado");
+    exit;
+}
 
 //  Generar token y enlace 
 $secret = "fS8#k2!9zR7bLx@qP4vT";        // clave para HMAC
@@ -51,6 +53,7 @@ try {
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->Port       = 465;
 
+    echo $emailIngresado;
     $mail->setFrom('rappifarm4@gmail.com', 'RappiFarma2');
     $mail->addAddress($emailIngresado);
 
@@ -62,6 +65,10 @@ try {
         <p><a href='$enlace'>$enlace</a></p>
         <p>Si no solicitaste este cambio, ignora este correo.</p>
     ";
+    $conn->query("CREATE EVENT actualizar_columna_15_min_".$row["ID"]." ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 15 MINUTE DO UPDATE USUARIOS SET CambiarContrasena=0 WHERE ID_Usuario=".$row["ID"]);
+    $stmt = $conn->prepare("UPDATE USUARIOS SET CambiarContrasena=1 WHERE Email=?");
+    $stmt->bind_param("s", $emailIngresado);
+    $stmt->execute();
 
     $mail->send();
 

@@ -169,6 +169,10 @@ body::before {
         <p class="msg-error">No se pudo enviar el correo. Intentalo nuevamente.</p>
     <?php endif; ?>
 
+    <?php if (isset($_GET['error']) && $_GET['error'] === 'solicitado'): ?>
+        <p class="msg-error">Ya ha solicitado un cambio de contraseña.</p>
+    <?php endif; ?>
+
     <form action="recuperarContrasenaAccion.php" method="POST">
         <input type="email" name="email" class="input" placeholder="Correo electrónico" required>
         <button type="submit">Recuperar</button>

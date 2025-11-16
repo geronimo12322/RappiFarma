@@ -79,8 +79,15 @@ if (!hash_equals($token_valido, $token)) {
 // actualizamos la contraseña en la BD
 $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-$stmt = $conn->prepare("UPDATE USUARIOS SET Password=? WHERE Email=?");
-$stmt->bind_param("ss", $password_hash, $email);
+$stmt = $conn->prepare("SELECT ID_Usuario AS ID FROM USUARIOS WHERE Email=? AND Estado='Activo'");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+$conn->query("DROP EVENT IF EXISTS actualizar_columna_15_min_".$row["ID"]);
+$stmt = $conn->prepare("UPDATE USUARIOS SET Password=?, CambiarContrasena=0 WHERE ID_Usuario=?");
+$stmt->bind_param("ss", $password_hash, $row["ID"]);
 
 // en caso de el cambio de contraseña sea correcto redirige a index
 if ($stmt->execute()) {

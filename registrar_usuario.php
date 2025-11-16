@@ -127,12 +127,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->addAddress($email);
 
                 $mail->isHTML(true);
-                $mail->Subject = 'Recuperación de contraseña RappiFarma';
+                $mail->Subject = 'Activacion de cuenta RappiFarma';
                 $mail->Body = "
                     <p>Hola,</p>
-                    <p>Haz click en el siguiente enlace para restablecer tu contraseña (válido por 15 minutos):</p>
+                    <p>Haz click en el siguiente enlace para activar su cuenta (válido por 15 minutos):</p>
                     <p><a href='$enlace'>$enlace</a></p>
-                    <p>Si no solicitaste este cambio, ignora este correo.</p>
+                    <p>Si no solicitaste una cuenta en RappiFarma, ignora este correo.</p>
                 ";
 
                 $mail->send();
