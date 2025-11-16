@@ -116,7 +116,6 @@ $(document).ready(function() {
                 datatype:"json",
                 data:  {info:data_ajax, opcion:"CARGAR_PRES", ID_Pedido:ID_Pedido, ID_Farmacia:ID_Farmacia, extra:extra},
                 success: function(data) {
-                    console.log(data);
                     var ret = JSON.parse(data);
                     if (ret['stat']) {
                         window.alert("Presupuesto cargado correctamente.");

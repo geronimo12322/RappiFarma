@@ -31,7 +31,7 @@ if (isset($_GET["ID"])) {
         $res = $stmt->get_result();
         $row = $res->fetch_assoc();
         if ($row["Cant"] == 0) { //Se comprueba que el pedido no haya sido ya aceptado por otra farmacia
-            $query = 'SELECT PE.ID_Pedido AS ID, CONCAT(USU.Nombre, " ", USU.Apellido) AS Nombre, USU.Provincia AS Prov, CONCAT(USU.Localidad, " (", USU.CP, ")") AS Loc, USU.Direccion AS Dir, PE.Receta AS Receta FROM pedidos PE INNER JOIN usuarios USU ON PE.ID_Usuario = USU.ID_Usuario WHERE PE.ID_Pedido = ?'; //Se buscan todos los datos asociados al pedido
+            $query = 'SELECT PE.ID_Pedido AS ID, CONCAT(USU.Nombre, " ", USU.Apellido) AS Nombre, USU.Provincia AS Prov, CONCAT(USU.Localidad, " (", USU.CP, ")") AS Loc, TieneObraSocial, CONCAT(USU.ObraSocial, " (", USU.NroCarnet, ")") AS DataObraSoc, USU.Direccion AS Dir, PE.Receta AS Receta FROM pedidos PE INNER JOIN usuarios USU ON PE.ID_Usuario = USU.ID_Usuario WHERE PE.ID_Pedido = ?'; //Se buscan todos los datos asociados al pedido
 
             $stmt = $conn->prepare($query);
             $stmt->bind_param('i', $ID);
@@ -75,6 +75,9 @@ if (!$ret["stat"]) {
                             echo "<b>Cliente:</b> " . $pedido["Nombre"];
                             echo "<br><b>Localidad:</b> " . $pedido["Prov"] . ", " . $pedido["Loc"];
                             echo "<br><b>Direccion:</b> " . $pedido["Dir"];
+                            if ($pedido["TieneObraSocial"]) {
+                                echo "<br><b>Datos obra social:</b> " . $pedido["DataObraSoc"];
+                            }
                             $image = imagecreatefromstring($pedido["Receta"]);
                             ob_start();
                             imagepng($image);
@@ -177,18 +180,18 @@ if (!$ret["stat"]) {
                     <div class="form-floating">
                         <select class="form-select" id="formato" name="formato">
                             <option value="" selected hidden>Formato</option>
-                            <option value="1">comprimidos</option>
-                            <option value="2">cápsulas</option>
-                            <option value="3">polvo</option>
-                            <option value="4">jarabe</option>
-                            <option value="5">suspensión</option>
-                            <option value="6">solución</option>
-                            <option value="7">pomada</option>
-                            <option value="8">crema</option>
-                            <option value="9">gel</option>
-                            <option value="10">inyectable</option>
-                            <option value="11">inhalable</option>
-                            <option value="12">transdérmica</option>
+                            <option value="Comprimidos">Comprimidos</option>
+                            <option value="Cápsulas">Cápsulas</option>
+                            <option value="Polvo">Polvo</option>
+                            <option value="Jarabe">Jarabe</option>
+                            <option value="Suspensión">Suspensión</option>
+                            <option value="Solución">Solución</option>
+                            <option value="Pomada">Pomada</option>
+                            <option value="Crema">Crema</option>
+                            <option value="Gel">Gel</option>
+                            <option value="Inyectable">Inyectable</option>
+                            <option value="Inhalable">Inhalable</option>
+                            <option value="Transdérmica">Transdérmica</option>
                         </select>
                         <label for="formato">Formato</label>
                     </div>

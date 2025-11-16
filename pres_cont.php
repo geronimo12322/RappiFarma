@@ -38,7 +38,7 @@ switch ($opcion) {
                     if ($ret["stat"]) {
                         $last_insert = $conn->insert_id;
                         $query_params = substr(str_repeat("(" . substr(str_repeat("?, ", 6), 0, -2) . "), ", count($info)), 0, -2); //Se arma un string de la forma (?, ?, ...), (?, ?, ...), ... para todos los campos a insertar en productos, y se multiplica la cantidad de veces que sea necesario para todos los productos
-                        $query = 'INSERT INTO productos(`ID_Presupuesto`, `NombreGenerico`, `NombreComercial`, `Formato`, `Precio`, `Cantidad`) VALUES ' . $query_params . ';';
+                        $query = 'INSERT INTO productos(`ID_Presupuesto`, `NombreGenerico`, `NombreComercial`, `Formato`, `Cantidad`, `Precio`) VALUES ' . $query_params . ';';
 
                         $stmt = $conn->prepare($query);
 
